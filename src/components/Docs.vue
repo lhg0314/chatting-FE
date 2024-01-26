@@ -26,17 +26,15 @@
         </v-col>
 
         <v-col cols="auto">
-          <v-btn href="" min-width="164" rel="noopener noreferrer" target="_blank" variant="text">
+          <v-btn href="" min-width="164" rel="noopener noreferrer" target="_blank" variant="text" @click="onClickRoomList">
             <v-icon icon="mdi-view-dashboard" size="large" start />
-
-            test2
+            ChatRoom
           </v-btn>
         </v-col>
 
         <v-col cols="auto">
           <v-btn href="" min-width="164" rel="noopener noreferrer" target="_blank" variant="text" @click="testFn4">
             <v-icon icon="mdi-view-dashboard" size="large" start />
-
             user(로그인/회원가입)
           </v-btn>
         </v-col>
@@ -67,6 +65,12 @@ const testFn4 = () => {
   router.push({
     name: "/user",
     query: { name: "Query방식", testKey: "testValue" }
+  })
+}
+
+const onClickRoomList = () => {
+  router.push({
+    name: "/chatHome"
   })
 }
 </script>
