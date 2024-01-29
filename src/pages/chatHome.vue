@@ -9,9 +9,9 @@ import { useRouter } from "vue-router"
 const emits = defineEmits(["click:room"])
 const router = useRouter()
 
-const joinChatRoom = (roomId: any) => {
+const joinChatRoom = (roomId: number) => {
   // 채팅룸으로 이동
   console.log("채팅방 id : ", roomId)
-  // router.push({ name: "/chatRoom", query: { roomId: roomId } })
+  router.push({ name: "/chatRoom", query: { roomId: roomId } })
 }
 </script>
