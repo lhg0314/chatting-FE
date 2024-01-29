@@ -19,10 +19,16 @@
   </v-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const emit = defineEmits(["click:room"])
 
-let items = [
+interface ChatItem {
+  id: string
+  avatar: string
+  roomName: string
+}
+
+let items: ChatItem[] = [
   {
     id: "1",
     avatar: "https://picsum.photos/250/300?image=660",
@@ -46,7 +52,7 @@ let items = [
 ]
 
 // 채팅방으로 이동
-const joinChatRoom = (item) => {
+const joinChatRoom = (item: ChatItem) => {
   emit("click:room", item.id)
   console.log(item.id)
 }
