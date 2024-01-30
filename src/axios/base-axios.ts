@@ -2,8 +2,7 @@ import Axios from "axios"
 import { getAccessToken, tokenRefresh } from "./apiUtil"
 
 const instance = Axios.create({
-  withCredentials: true,
-  baseURL: "http://localhost:3000/api",
+  baseURL: "http://localhost:8085",
   timeout: 5000
 })
 
