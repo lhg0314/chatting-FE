@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { getAccessToken, tokenRefresh } from "./apiUtil"
+import { getAccessToken, setNewAccessToken } from "./apiUtil"
 
 const instance = Axios.create({
   withCredentials: true,
@@ -27,31 +27,18 @@ instance.interceptors.request.use(
   }
 )
 
-instance.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error) => {
-    console.log(error.response)
-    console.log(Number(error.response?.status) / 100)
-    if (error.response?.status < 500 && error.response?.status >= 400) {
-      alert(`${error.response.data.code} == ${error.response.data.message}`)
-    }
-    if (error.response?.status === 401) {
-      window.location.href = "/unauthorized"
-    } else if (error.response?.status === 404) {
-      window.location.href = "/notFound"
-    } else if (error.response && error.response?.status === 500) {
-      const errorCode = error.response.data.code
-      if (errorCode === 7001) {
-        await tokenRefresh(instance)
-        const accessToken = getAccessToken()
-        error.config.headers.Authorization = `Bearer ${accessToken}`
-        // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
-        return instance(error.config)
-      }
-    }
+instance.interceptors.response.use((response) => {
+  console.log("Api Response : " + response.headers["authorization"])
+  if ((response.headers["authorization"] !== undefined, null)) {
+    setNewAccessToken(response.headers["authorization"].split(" ")[1])
   }
-)
+
+  console.log(response.data)
+
+  if (response.data.code === "C008") {
+    alert("토큰 만료! 로그인 페이지로 이동합니다 !")
+  }
+  return response
+})
 
 export default instance

@@ -1,11 +1,8 @@
 import exService from "./base-axios"
 import Axios from "axios"
-import { tokenRefresh } from "./apiUtil"
 
 const requestTestApi = async () => {
   // jwt 필요한 api는 exService 사용
-  await tokenRefresh(exService)
-
   return exService.post("/user/auth/signup", {
     userId: "id333",
     userPw: "1234",

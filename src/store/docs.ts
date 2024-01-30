@@ -7,8 +7,7 @@ export const useAppStore = defineStore("app", () => {
 
   const requestLoginFunction = async () => {
     const res = await requestLogin()
-    localStorage.setItem("jwtToken", res.data.data.accessToken)
-    localStorage.setItem("reToken", res.data.data.refreshToken)
+    localStorage.setItem("accessToken", res.data.data.accessToken)
   }
 
   const requestJoinFunction = async () => {
