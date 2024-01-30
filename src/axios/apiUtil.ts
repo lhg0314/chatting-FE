@@ -1,15 +1,6 @@
-import { AxiosInstance } from "axios"
-
-export const tokenRefresh = async (instance: AxiosInstance) => {
-  const refreshToken = getRefreshToken() // 리프레시 토큰을 가져오기
-
-  const { data } = await instance.post("/auth/refresh", {
-    headers: { "Content-Type": "application/json", refreshToken: `Bearer ${refreshToken}` }
-  })
-
-  const newAccessToken = data.accessToken
-  //리프레시토큰도 저장 해야함
-  localStorage.setItem("jwtToken", newAccessToken) // 세션 스토리지에 액세스 토큰 저장
+export const setNewAccessToken = (accessToken: string): void => {
+  console.log(`새로 발급 받은 토큰 : ${accessToken}`)
+  localStorage.setItem("accessToken", accessToken)
 }
 
 export const getRefreshToken = () => {
@@ -17,5 +8,5 @@ export const getRefreshToken = () => {
 }
 
 export const getAccessToken = () => {
-  return localStorage.getItem("jwtToken")
+  return localStorage.getItem("accessToken")
 }
