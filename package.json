@@ -12,12 +12,15 @@
     "axios": "^1.6.5",
     "core-js": "^3.34.0",
     "roboto-fontface": "*",
+    "sockjs-client": "^1.6.1",
     "vue": "^3.3.0",
-    "vuetify": "^3.0.0"
+    "vuetify": "^3.0.0",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@babel/types": "^7.23.0",
     "@types/node": "^20.11.5",
+    "@types/sockjs-client": "^1.5.4",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@vitejs/plugin-vue": "^4.5.0",
     "@vue/eslint-config-typescript": "^12.0.0",
