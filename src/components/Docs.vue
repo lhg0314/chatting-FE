@@ -81,8 +81,7 @@ const testFn3 = () => {
 }
 const testFn4 = () => {
   router.push({
-    name: "/user",
-    query: { name: "Query방식", testKey: "testValue" }
+    name: "/signIn"
   })
 }
 

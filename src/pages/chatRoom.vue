@@ -16,10 +16,11 @@ import ChatToolbar from "@/components/chat/ChatToolbar.vue"
 import ChatMessage from "@/components/chat/ChatMessage.vue"
 import ChatInput from "@/components/chat/ChatInput.vue"
 import { requestSendMessage } from "@/axios/chat-service-axios"
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted, Ref, ref } from "vue"
 import { useRoute } from "vue-router"
 import SockJS from "sockjs-client"
 import { stompClient } from "@/socket/socket-service"
+import { getAccessToken } from "@/axios/apiUtil"
 
 const route = useRoute()
 const emits = defineEmits(["send:message"])
@@ -27,21 +28,24 @@ const emits = defineEmits(["send:message"])
 const title = "채팅방1"
 const roomId = ref()
 
-interface messageItem {
-  readYn: string
-  message: string
-  userId: string
-  roomId: Number
-  msgType: string
+interface IMessage {
+  createAt?: string
+  msg?: string
+  msgType?: string
+  readYn?: string
+  roomId?: number
+  userId?: string
 }
-let messages: messageItem[] = [] // 받은메세지
+const messages: Ref<IMessage[]> = ref([])
 
 const initailize = () => {
   console.log("query.roomId >>> ", route.query.roomId)
   roomId.value = route.query.roomId // 방번호
 
+  const accessToken = getAccessToken()
+  const headers: any = { Authorization: accessToken }
   stompClient.connect(
-    {},
+    headers,
     (frame) => {
       // 소켓 연결 성공
       let connected = true
@@ -53,7 +57,7 @@ const initailize = () => {
         console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
         let response = JSON.parse(res.body).data
-        messages.push(response)
+        messages.value.push(response)
         console.log("messages >> ", messages)
       })
     },

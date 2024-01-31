@@ -1,16 +1,12 @@
 import _userService from "./base-axios"
 import Axios, { AxiosResponse } from "axios"
-import { RequestSignIn, ResponseSignIn } from "@/types/user"
+import { RequestSignIn, RequestSignUp, ResponseSignIn, ResponseSignUp } from "@/types/user"
 //토큰 필요없는 axios instance 사용
 const userService = _userService(null, null)
 
-const requestTestApi = async () => {
-  // jwt 필요한 api는 exService 사용
-  return userService.post("/user/auth/signup", {
-    userId: "id333",
-    userPw: "1234",
-    name: "wldnjs"
-  })
+const requestSignUp = async (body: RequestSignUp): Promise<BaseRes<ResponseSignUp>> => {
+  const { data } = await userService.post("/user/auth/signup", body)
+  return data
 }
 
 const requestSignIn = async (body: RequestSignIn): Promise<BaseRes<ResponseSignIn>> => {
@@ -18,4 +14,4 @@ const requestSignIn = async (body: RequestSignIn): Promise<BaseRes<ResponseSignI
   return data
 }
 
-export { requestTestApi, requestSignIn }
+export { requestSignIn, requestSignUp }
