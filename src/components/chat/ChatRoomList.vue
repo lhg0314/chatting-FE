@@ -4,7 +4,7 @@
       <v-toolbar-title>채팅방 목록</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <v-btn icon @click="createChatRoom">
         <v-icon dark>mdi-plus</v-icon>
       </v-btn>
     </v-toolbar>
@@ -19,10 +19,20 @@
   </v-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref } from "vue"
+
 const emit = defineEmits(["click:room"])
 
-let items = [
+const roomName = ref("")
+
+interface ChatItem {
+  id: string
+  avatar: string
+  roomName: string
+}
+
+let items: ChatItem[] = [
   {
     id: "1",
     avatar: "https://picsum.photos/250/300?image=660",
@@ -46,8 +56,13 @@ let items = [
 ]
 
 // 채팅방으로 이동
-const joinChatRoom = (item) => {
+const joinChatRoom = (item: ChatItem) => {
   emit("click:room", item.id)
   console.log(item.id)
+}
+
+// 채팅방 생성
+const createChatRoom = () => {
+  console.log("채팅방 생성")
 }
 </script>

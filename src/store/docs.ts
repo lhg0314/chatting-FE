@@ -1,19 +1,22 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
-import { requestTestApi, requestLogin } from "@/axios/docs-service-axios"
+import { requestTestApi, requestLogin, requestUserList } from "@/axios/docs-service-axios"
 
 export const useAppStore = defineStore("app", () => {
   const testRef: any = ref({})
 
   const requestLoginFunction = async () => {
     const res = await requestLogin()
-    localStorage.setItem("jwtToken", res.data.data.accessToken)
-    localStorage.setItem("reToken", res.data.data.refreshToken)
+    localStorage.setItem("accessToken", res.data.data.accessToken)
   }
 
   const requestJoinFunction = async () => {
     const res = await requestTestApi()
     setTestRef(res)
+  }
+
+  const requestUserListFn = async () => {
+    const res = await requestUserList()
   }
 
   const setTestRef = (value: any) => {
@@ -22,6 +25,7 @@ export const useAppStore = defineStore("app", () => {
 
   return {
     requestLoginFunction,
-    requestJoinFunction
+    requestJoinFunction,
+    requestUserListFn
   }
 })
