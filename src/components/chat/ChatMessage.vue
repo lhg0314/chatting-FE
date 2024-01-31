@@ -1,21 +1,21 @@
 <template>
   <v-layout class="chat-messages" row wrap>
     <v-flex v-for="(item, index) in messages" :key="index" xs12>
-      <v-card v-if="item.type === 'system'" class="chat-system-message" color="grey-lighten-2" flat>
+      <v-card v-if="item.msgType === 'system'" class="chat-system-message" color="grey-lighten-2" flat>
         <v-card-text class="text-grey-darken-1">
-          {{ item.message }}
+          {{ item.msg }}
         </v-card-text>
       </v-card>
 
-      <v-card v-else class="chat-message-box" :class="item.isOwn ? 'chat-right' : 'chat-left'" flat>
+      <v-card v-else class="chat-message-box" :class="item.userId ? 'chat-right' : 'chat-left'" flat>
         <v-card-title class="chat-username" style="font-size: 1em">
-          <div class="text-grey-darken-1">{{ !item.isOwn ? item.username : "" }}</div>
+          <div class="text-grey-darken-1">{{ !item.userId ? item.userId : "" }}</div>
         </v-card-title>
 
         <!-- <v-img v-if="item.type === 'image'" :src="item.imageUrl" class="chat-image" max-width="400px" contain></v-img> -->
 
         <v-card-text class="chat-message">
-          {{ item.message }}
+          {{ item.msg }}
         </v-card-text>
       </v-card>
     </v-flex>
@@ -27,6 +27,8 @@ import { computed, onMounted } from "vue"
 
 const props = defineProps(["messages"])
 const messages = props.messages
+
+console.log("props.messages >>> ", props.messages)
 </script>
 
 <style lang="scss" scoped>

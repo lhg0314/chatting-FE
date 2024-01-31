@@ -8,12 +8,16 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 
+const emit = defineEmits(["send:message"])
+
 const message = ref("") // 입력 메세지
 
 const send = () => {
+  console.log("메세지 전송")
   if (message.value === "") {
     return
   }
+  emit("send:message", message.value)
   message.value = ""
 }
 </script>
