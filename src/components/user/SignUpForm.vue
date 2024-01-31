@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height">
     <v-responsive class="align-center text-center fill-height">
-      <v-card class="ma-14" title="LOGIN">
+      <v-card class="ma-14" title="Sign up">
         <v-card-item>
           <v-form ref="form">
             <v-text-field v-model="id" :counter="10" label="ID"></v-text-field>
@@ -9,10 +9,10 @@
             <v-text-field v-model="name" :counter="10" label="NAME"></v-text-field>
 
             <div class="d-flex flex-column">
-              <v-btn color="success" class="mt-4" block @click="onClickLogin"> 로그인 </v-btn>
+              <v-btn color="success" class="mt-4" block @click="onClickLogin"> Sign in </v-btn>
             </div>
             <div class="d-flex flex-column">
-              <v-btn color="error" class="mt-4" block @click="onClickLogin"> 회원가입 </v-btn>
+              <v-btn color="error" class="mt-4" block @click="onClickLogin"> Sign up </v-btn>
             </div>
           </v-form>
         </v-card-item>

@@ -46,6 +46,12 @@
             소켓연결
           </v-btn>
         </v-col>
+        <v-col cols="auto">
+          <v-btn href="" min-width="164" rel="noopener noreferrer" target="_blank" variant="text" @click="getUserList">
+            <v-icon icon="mdi-view-dashboard" size="large" start />
+            유저목록 요청
+          </v-btn>
+        </v-col>
       </v-row>
     </v-responsive>
   </v-container>
@@ -57,13 +63,14 @@ import { useRoute, useRouter } from "vue-router"
 
 import Stomp from "webstomp-client"
 import SockJS from "sockjs-client"
+import axios from "axios"
 
 const router = useRouter()
 const route = useRoute()
 
 const store = useAppStore()
 
-const testFn = () => {
+const testFn = async () => {
   store.requestLoginFunction()
 }
 const testFn2 = () => {
@@ -78,6 +85,11 @@ const testFn4 = () => {
     query: { name: "Query방식", testKey: "testValue" }
   })
 }
+
+const getUserList = () => {
+  store.requestUserListFn()
+}
+
 const testConn = () => {
   const serverURL = "http://localhost:8085/ws"
   let socket = new SockJS(serverURL)
