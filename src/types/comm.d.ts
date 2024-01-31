@@ -3,3 +3,7 @@ declare interface BaseRes<T> {
   message: string
   data: T
 }
+
+declare interface AxiosOption {
+  error?: boolean //error alert 여부
+}

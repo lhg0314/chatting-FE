@@ -7,6 +7,7 @@ const useTokenRequestInterceptor = (config: InternalAxiosRequestConfig) => {
   const accessToken = getAccessToken()
 
   if (!accessToken) {
+    alert("로그인이 필요한 서비스입니다.")
     window.location.href = "/"
     return config
   }
@@ -32,11 +33,16 @@ const useTokenResponseInterceptor = (response: AxiosResponse) => {
   return response
 }
 
+const defaultOption = {
+  error: true
+}
+
 export default (
   requestInterceptor:
     | ((value: InternalAxiosRequestConfig) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>)
     | null = useTokenRequestInterceptor,
   responseInterceptor: ((value: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>) | null = useTokenResponseInterceptor,
+  options: AxiosOption = defaultOption,
   baseURL = "http://localhost:8085",
   timeout = 5000
 ) => {
@@ -45,8 +51,15 @@ export default (
     timeout
   })
 
+  const _options = { ...defaultOption, ...options }
+
   instance.interceptors.request.use(requestInterceptor)
-  instance.interceptors.response.use(responseInterceptor)
+  instance.interceptors.response.use(responseInterceptor, ({ response }) => {
+    console.log("interceptor option > ", _options)
+
+    if (_options.error) alert(response.data.message)
+    return Promise.reject(response.data)
+  })
 
   return instance
 }
