@@ -10,11 +10,15 @@ const noneTokenService = _tokenService(null, null)
 
 const requestTestApi = async () => {
   // jwt 필요한 api는 exService 사용
-  return tokenService.post("/user/auth/signup", {
-    userId: "id4333",
-    userPw: "41234",
-    name: "test"
-  })
+  try {
+    return await noneTokenService.post("/user/auth/signup", {
+      userId: "id4333",
+      userPw: "41234",
+      name: "test"
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const requestLogin = () => {

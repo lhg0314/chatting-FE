@@ -4,15 +4,21 @@
       <v-card class="pa-4 ma-14" title="Sign in">
         <v-card-item>
           <v-form ref="form">
-            <v-text-field v-model="id" :counter="10" label="ID"></v-text-field>
-            <v-text-field v-model="pw" :counter="12" label="PASSWORD"></v-text-field>
+            <v-text-field ref="idInput" v-model="id" :counter="10" label="ID"></v-text-field>
+            <v-text-field
+              v-model="pw"
+              :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="visible ? 'text' : 'password'"
+              label="PASSWORD"
+              @click:append-inner="visible = !visible"
+            ></v-text-field>
             <!-- <v-text-field v-model="name" :counter="10" label="NAME"></v-text-field> -->
 
             <div class="d-flex flex-column">
               <v-btn color="success" class="mt-4" block @click="onClickLogin"> Sign in </v-btn>
             </div>
             <div class="mt-3 d-flex flex-column">
-              <a href="#" class="text-body-2 font-weight-regular">Sign up ></a>
+              <v-btn variant="text" @click="onChangeSignUp"> Sign up <v-icon icon="mdi mdi-chevron-right"></v-icon></v-btn>
             </div>
           </v-form>
         </v-card-item>
@@ -22,23 +28,44 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/store/user/login"
-import { onMounted, ref } from "vue"
+import { useUserStore } from "@/store/user/user"
+import { onMounted, Ref, ref } from "vue"
 import { useRouter } from "vue-router"
+import { VTextField } from "vuetify/lib/components/index.mjs"
+
+const emit = defineEmits(["changeStatus"])
+
+const idInput: Ref<VTextField | null> = ref(null)
+
 const id = ref("")
 const pw = ref("")
+
+const visible = ref(false)
 
 const store = useUserStore()
 const router = useRouter()
 
 const onClickLogin = async () => {
-  await store.apiSignInFn({ userId: id.value, userPw: pw.value })
+  try {
+    await store.requestLogin({ userId: id.value, userPw: pw.value })
+    router.push({
+      name: "/chatHome"
+    })
+  } catch (error: any) {
+    console.log(error)
+    if (error.code === "C002") {
+      idInput.value?.focus()
+    }
+  }
+}
+
+const onChangeSignUp = () => {
   router.push({
-    name: "/chatHome"
+    name: "/signUp"
   })
 }
 
 onMounted(() => {
-  console.log("init")
+  idInput.value?.focus()
 })
 </script>
