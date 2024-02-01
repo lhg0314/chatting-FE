@@ -3,8 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import SignInForm from "@/components/user/SignInForm.vue"
-import { onMounted, onUnmounted, Ref, ref } from "vue"
+import SignInForm from "@/components/sign/SignInForm.vue"
 import { useRoute, useRouter } from "vue-router"
 
 const router = useRouter()
