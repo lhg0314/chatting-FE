@@ -1,7 +1,7 @@
 <template>
   <div class="chat-room-page">
     <div class="chat-messages-container">
-      <ChatToolbar :title="title"> </ChatToolbar>
+      <ChatToolbar :roomName="roomName"> </ChatToolbar>
       <ChatMessage :messages="messages" />
     </div>
 
@@ -24,8 +24,8 @@ import { getAccessToken } from "@/axios/apiUtil"
 const route = useRoute()
 const emits = defineEmits(["send:message"])
 
-const title = "채팅방1"
-const roomId = ref()
+const roomId = ref() // 채팅방 번호
+const roomName = ref(route.query.roomName) // 채팅방 이름
 
 interface IMessage {
   createAt?: string
@@ -38,8 +38,9 @@ interface IMessage {
 const messages: Ref<IMessage[]> = ref([])
 
 const initailize = () => {
-  console.log("query.roomId >>> ", route.query.roomId)
-  roomId.value = route.query.roomId // 방번호
+  console.log("query >>> ", route.query)
+  roomId.value = route.query.roomId
+  //roomName.value = route.query.roomName
 
   const accessToken = getAccessToken()
   const headers: any = { Authorization: accessToken }
