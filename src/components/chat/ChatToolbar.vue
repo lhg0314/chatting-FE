@@ -26,13 +26,13 @@ import { useRouter } from "vue-router"
 
 const router = useRouter()
 const props = defineProps({
-  title: {
+  roomName: {
     Type: String,
     default: ""
   }
 })
 
-const toolBarTitle = ref(props.title)
+const toolBarTitle = props.roomName
 
 const onClickGoRoomList = () => {
   console.log("채팅방 목록으로 이동")
