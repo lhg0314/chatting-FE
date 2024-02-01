@@ -13,9 +13,9 @@ const emits = defineEmits(["click:room"])
 
 const router = useRouter()
 
-const joinChatRoom = (roomId: number) => {
+const joinChatRoom = (roomId: number, roomName: string) => {
   // 채팅룸으로 이동
-  console.log("채팅방 id : ", roomId)
-  router.push({ name: "/chatRoom", query: { roomId: roomId } })
+  console.log("채팅방 id : ", roomId, roomName)
+  router.push({ name: "/chatRoom", query: { roomId: roomId, roomName: roomName } })
 }
 </script>

@@ -1,6 +1,9 @@
 <template>
   <v-card color="grey-lighten-4" class="mx-auto" max-width="800">
     <v-toolbar color="#42b983" dark>
+      <v-btn slot="prepend" icon @click="onClickGoHome">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
       <v-toolbar-title>채팅방 목록</v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -24,9 +27,11 @@ import { useChatStore } from "@/store/chat/chat"
 import { storeToRefs } from "pinia"
 import { computed, onMounted, ref } from "vue"
 import { IChatRoom } from "@/types/chat"
+import { useRouter } from "vue-router"
 
 const emit = defineEmits(["click:room"])
 
+const router = useRouter()
 const store = useChatStore()
 const { getChatRoomList } = storeToRefs(store)
 const roomName = ref("")
@@ -40,13 +45,13 @@ const roomList = computed(() => getChatRoomList.value)
 
 // 채팅방으로 이동
 const joinChatRoom = (item: IChatRoom) => {
-  emit("click:room", item.roomId)
-  console.log(item.roomId)
+  emit("click:room", item.roomId, item.roomName)
+  console.log(item.roomId, item.roomName)
 }
 
-// 채팅방 생성
-const createChatRoom = () => {
-  console.log("채팅방 생성")
+// 홈으로 이동
+const onClickGoHome = () => {
+  router.push("/")
 }
 
 onMounted(() => initailize())
