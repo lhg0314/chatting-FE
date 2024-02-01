@@ -6,7 +6,7 @@ import Axios from "axios"
 const tokenService = _tokenService()
 // request interceptor 사용 X
 // response interceptor 사용 X
-const noneTokenService = _tokenService({ useToken: false })
+const noneTokenService = _tokenService(null, null)
 
 const requestTestApi = async () => {
   // jwt 필요한 api는 exService 사용
