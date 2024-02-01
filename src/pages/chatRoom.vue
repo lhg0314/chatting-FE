@@ -15,7 +15,6 @@
 import ChatToolbar from "@/components/chat/ChatToolbar.vue"
 import ChatMessage from "@/components/chat/ChatMessage.vue"
 import ChatInput from "@/components/chat/ChatInput.vue"
-import { requestSendMessage } from "@/axios/chat-service-axios"
 import { computed, onMounted, Ref, ref } from "vue"
 import { useRoute } from "vue-router"
 import SockJS from "sockjs-client"
@@ -52,14 +51,18 @@ const initailize = () => {
       console.log("소켓 연결 성공", frame)
       // 서버의 메시지 전송 endpoint를 구독합니다.
       // 이런형태를 pub sub 구조라고 합니다.
-      stompClient.subscribe("/sub/room/" + roomId.value, (res) => {
-        // 새로운 메시지 도착 시 실행되는 콜백 함수
-        console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
+      stompClient.subscribe(
+        "/sub/room/" + roomId.value,
+        (res) => {
+          // 새로운 메시지 도착 시 실행되는 콜백 함수
+          console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
-        let response = JSON.parse(res.body).data
-        messages.value.push(response)
-        console.log("messages >> ", messages)
-      })
+          let response = JSON.parse(res.body).data
+          messages.value.push(response)
+          console.log("messages >> ", messages)
+        },
+        headers
+      )
     },
     (error) => {
       // 소켓 연결 실패
@@ -74,8 +77,8 @@ const sendMessage = (msg: String) => {
   const body = {
     roomId: roomId.value,
     userId: "id3",
-    msg: msg,
-    msgType: typeof msg == "string" ? "TALK" : "FILE"
+    message: msg,
+    messageType: typeof msg == "string" ? "TALK" : "FILE"
   }
   stompClient.send("/pub/chat/" + roomId.value, JSON.stringify(body))
   msg = ""
