@@ -12,5 +12,5 @@ export const getAccessToken = () => {
 }
 
 export const getUserId = () => {
-  return localStorage.getItem("userId")
+  return localStorage.getItem("userId") || ""
 }

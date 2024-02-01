@@ -19,7 +19,7 @@ import { computed, onMounted, Ref, ref } from "vue"
 import { useRoute } from "vue-router"
 import SockJS from "sockjs-client"
 import { stompClient } from "@/socket/socket-service"
-import { getAccessToken } from "@/axios/apiUtil"
+import { getAccessToken, getUserId } from "@/axios/apiUtil"
 
 const route = useRoute()
 const emits = defineEmits(["send:message"])
@@ -75,9 +75,10 @@ const initailize = () => {
 
 const sendMessage = (msg: String) => {
   // 메세지 전송
+  const userId = getUserId()
   const body = {
     roomId: roomId.value,
-    userId: "id3",
+    userId: userId,
     message: msg,
     messageType: typeof msg == "string" ? "TALK" : "FILE"
   }

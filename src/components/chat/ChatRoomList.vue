@@ -7,7 +7,7 @@
       <v-toolbar-title>채팅방 목록</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn icon @click="createChatRoom">
+      <v-btn icon>
         <v-icon dark>mdi-plus</v-icon>
       </v-btn>
     </v-toolbar>
@@ -28,6 +28,7 @@ import { storeToRefs } from "pinia"
 import { computed, onMounted, ref } from "vue"
 import { IChatRoom } from "@/types/chat"
 import { useRouter } from "vue-router"
+import { getUserId } from "@/axios/apiUtil"
 
 const emit = defineEmits(["click:room"])
 
@@ -35,9 +36,9 @@ const router = useRouter()
 const store = useChatStore()
 const { getChatRoomList } = storeToRefs(store)
 const roomName = ref("")
-const userId: string = "id3"
 
 const initailize = async () => {
+  const userId: string = getUserId()
   await store.requestChatRoom(userId) // 채팅방 목록
 }
 
