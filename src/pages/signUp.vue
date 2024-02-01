@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-import SignUpForm from "@/components/sign/SignUpForm.vue"
+import SignUpForm from "@/components/user/SignUpForm.vue"
+import { onMounted, onUnmounted, Ref, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 const router = useRouter()

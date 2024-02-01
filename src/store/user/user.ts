@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
-import { requestSignIn, requestSignUp } from "@/axios/sign-service-axios"
-import { RequestSignIn, RequestSignUp } from "@/types/sign"
+import { requestSignIn, requestSignUp } from "@/axios/user-service-axios"
+import { RequestSignIn, RequestSignUp } from "@/types/user"
 
-export const useSignStore = defineStore("signStore", () => {
+export const useUserStore = defineStore("userStore", () => {
   const requestLogin = async (value: RequestSignIn) => {
     const { data } = await requestSignIn(value)
 
