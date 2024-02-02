@@ -7,9 +7,9 @@
         </v-card-text>
       </v-card>
 
-      <v-card v-else class="chat-message-box" :class="item.userId ? 'chat-right' : 'chat-left'" flat>
+      <v-card v-else class="chat-message-box" :class="item.userId == userId ? 'chat-right' : 'chat-left'" flat>
         <v-card-title class="chat-username" style="font-size: 1em">
-          <div class="text-grey-darken-1">{{ !item.userId ? item.userId : "" }}</div>
+          <div class="text-grey-darken-1">{{ item.userId != userId ? item.userId : "" }}</div>
         </v-card-title>
 
         <!-- <v-img v-if="item.type === 'image'" :src="item.imageUrl" class="chat-image" max-width="400px" contain></v-img> -->
@@ -23,10 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue"
+import { computed, onMounted, onUpdated, ref, watch } from "vue"
+import { getUserId } from "@/axios/apiUtil"
 
 const props = defineProps(["messages"])
-const messages = props.messages
+const messages = ref(props.messages)
+const userId = ref(getUserId())
 
 console.log("props.messages >>> ", props.messages)
 </script>
