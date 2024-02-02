@@ -3,10 +3,12 @@ export const setNewAccessToken = (accessToken: string): void => {
   localStorage.setItem("accessToken", accessToken)
 }
 
-export const getRefreshToken = () => {
-  return localStorage.getItem("reToken")
-}
-
 export const getAccessToken = () => {
   return localStorage.getItem("accessToken")
+}
+
+export const clearTokenInfo = () => {
+  localStorage.removeItem("accessToken")
+  localStorage.removeItem("name")
+  localStorage.removeItem("userId")
 }

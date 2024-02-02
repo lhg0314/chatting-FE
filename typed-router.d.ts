@@ -37,20 +37,20 @@ import type {
   _DefineLoaderOptions,
 } from 'unplugin-vue-router/types'
 
-declare module 'vue-router/auto/routes' {
+declare module "vue-router/auto/routes" {
   export interface RouteNamedMap {
-    '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/chatHome': RouteRecordInfo<'/chatHome', '/chatHome', Record<never, never>, Record<never, never>>,
-    '/chatRoom': RouteRecordInfo<'/chatRoom', '/chatRoom', Record<never, never>, Record<never, never>>,
-    '/helloworld': RouteRecordInfo<'/helloworld', '/helloworld', Record<never, never>, Record<never, never>>,
-    '/signIn': RouteRecordInfo<'/signIn', '/signIn', Record<never, never>, Record<never, never>>,
-    '/signUp': RouteRecordInfo<'/signUp', '/signUp', Record<never, never>, Record<never, never>>,
-    '/userList': RouteRecordInfo<'/userList', '/userList', Record<never, never>, Record<never, never>>,
+    "/": RouteRecordInfo<"/", "/", Record<never, never>, Record<never, never>>
+    "/chatHome": RouteRecordInfo<"/chatHome", "/chatHome", Record<never, never>, Record<never, never>>
+    "/chatRoom": RouteRecordInfo<"/chatRoom", "/chatRoom", Record<never, never>, Record<never, never>>
+    "/helloworld": RouteRecordInfo<"/helloworld", "/helloworld", Record<never, never>, Record<never, never>>
+    "/signIn": RouteRecordInfo<"/signIn", "/signIn", Record<never, never>, Record<never, never>>
+    "/signUp": RouteRecordInfo<"/signUp", "/signUp", Record<never, never>, Record<never, never>>
+    "/userList": RouteRecordInfo<"/userList", "/userList", Record<never, never>, Record<never, never>>
   }
 }
 
-declare module 'vue-router/auto' {
-  import type { RouteNamedMap } from 'vue-router/auto/routes'
+declare module "vue-router/auto" {
+  import type { RouteNamedMap } from "vue-router/auto/routes"
 
   export type RouterTyped = _RouterTyped<RouteNamedMap>
 
@@ -64,7 +64,8 @@ declare module 'vue-router/auto' {
    * Type safe version of `RouteLocationNormalizedLoaded` (the return type of `useRoute()`).
    * Allows passing the name of the route to be passed as a generic.
    */
-  export type RouteLocationNormalizedLoaded<Name extends keyof RouteNamedMap = keyof RouteNamedMap> = RouteLocationNormalizedLoadedTypedList<RouteNamedMap>[Name]
+  export type RouteLocationNormalizedLoaded<Name extends keyof RouteNamedMap = keyof RouteNamedMap> =
+    RouteLocationNormalizedLoadedTypedList<RouteNamedMap>[Name]
 
   /**
    * Type safe version of `RouteLocationResolved` (the returned route of `router.resolve()`).
@@ -88,14 +89,16 @@ declare module 'vue-router/auto' {
   /**
    * Generate a type safe params for a route location. Requires the name of the route to be passed as a generic.
    */
-  export type RouteParams<Name extends keyof RouteNamedMap> = RouteNamedMap[Name]['params']
+  export type RouteParams<Name extends keyof RouteNamedMap> = RouteNamedMap[Name]["params"]
   /**
    * Generate a type safe raw params for a route location. Requires the name of the route to be passed as a generic.
    */
-  export type RouteParamsRaw<Name extends keyof RouteNamedMap> = RouteNamedMap[Name]['paramsRaw']
+  export type RouteParamsRaw<Name extends keyof RouteNamedMap> = RouteNamedMap[Name]["paramsRaw"]
 
   export function useRouter(): RouterTyped
-  export function useRoute<Name extends keyof RouteNamedMap = keyof RouteNamedMap>(name?: Name): RouteLocationNormalizedLoadedTypedList<RouteNamedMap>[Name]
+  export function useRoute<Name extends keyof RouteNamedMap = keyof RouteNamedMap>(
+    name?: Name
+  ): RouteLocationNormalizedLoadedTypedList<RouteNamedMap>[Name]
 
   export const useLink: UseLinkFnTyped<RouteNamedMap>
 
@@ -107,33 +110,26 @@ declare module 'vue-router/auto' {
 
   // Experimental Data Fetching
 
-  export function defineLoader<
-    P extends Promise<any>,
-    Name extends keyof RouteNamedMap = keyof RouteNamedMap,
-    isLazy extends boolean = false,
-  >(
+  export function defineLoader<P extends Promise<any>, Name extends keyof RouteNamedMap = keyof RouteNamedMap, isLazy extends boolean = false>(
     name: Name,
     loader: (route: RouteLocationNormalizedLoaded<Name>) => P,
-    options?: _DefineLoaderOptions<isLazy>,
+    options?: _DefineLoaderOptions<isLazy>
   ): _DataLoader<Awaited<P>, isLazy>
-  export function defineLoader<
-    P extends Promise<any>,
-    isLazy extends boolean = false,
-  >(
+  export function defineLoader<P extends Promise<any>, isLazy extends boolean = false>(
     loader: (route: RouteLocationNormalizedLoaded) => P,
-    options?: _DefineLoaderOptions<isLazy>,
+    options?: _DefineLoaderOptions<isLazy>
   ): _DataLoader<Awaited<P>, isLazy>
 
   export {
     _definePage as definePage,
     _HasDataLoaderMeta as HasDataLoaderMeta,
     _setupDataFetchingGuard as setupDataFetchingGuard,
-    _stopDataFetchingScope as stopDataFetchingScope,
-  } from 'unplugin-vue-router/runtime'
+    _stopDataFetchingScope as stopDataFetchingScope
+  } from "unplugin-vue-router/runtime"
 }
 
-declare module 'vue-router' {
-  import type { RouteNamedMap } from 'vue-router/auto/routes'
+declare module "vue-router" {
+  import type { RouteNamedMap } from "vue-router/auto/routes"
 
   export interface TypesConfig {
     beforeRouteUpdate: NavigationGuard<RouteNamedMap>

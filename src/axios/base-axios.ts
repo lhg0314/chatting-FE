@@ -1,6 +1,6 @@
 import { useAppStore } from "@/store/comm"
 import Axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios"
-import { getAccessToken, setNewAccessToken } from "./apiUtil"
+import { clearTokenInfo, getAccessToken, setNewAccessToken } from "./apiUtil"
 
 const defaultOption = {
   error: true,
@@ -32,8 +32,7 @@ export default (
     const accessToken = getAccessToken()
 
     if (!accessToken) {
-      alert("로그인이 필요한 서비스입니다.")
-      window.location.href = "/"
+      window.location.href = "/signin"
       return config
     }
 
@@ -50,16 +49,19 @@ export default (
     }
     if (!_options.useToken) return response
 
-    console.log("Api Response : " + response.headers["authorization"])
-    if ((response.headers["authorization"] !== undefined, null)) {
-      setNewAccessToken(response.headers["authorization"].split(" ")[1])
-    }
+    const token = response.headers["authorization"]
 
-    console.log("oooo", response.data)
+    console.log("Api Response : " + token)
+    if (token !== undefined && token !== null) {
+      setNewAccessToken(token.split(" ")[1])
+    }
 
     if (response.data.code === "C008") {
+      clearTokenInfo()
       alert("토큰 만료! 로그인 페이지로 이동합니다 !")
+      window.location.href = "/signin"
     }
+
     return response
   }
 

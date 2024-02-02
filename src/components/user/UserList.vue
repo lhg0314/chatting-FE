@@ -4,65 +4,61 @@
       <v-toolbar-title>사용자 목록</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn icon @click="createChatRoom">
+      <v-btn icon @click="createGroupChatRoom">
         <v-icon dark>mdi-plus</v-icon>
       </v-btn>
     </v-toolbar>
 
     <v-list lines="two">
-      <v-list-item v-for="item in items" :key="item.roomName" :prepend-avatar="item.avatar" ripple @click="joinChatRoom(item)">
-        <template v-slot:title>
-          <div v-html="item.roomName"></div>
-        </template>
-      </v-list-item>
+      <template v-for="(item, index) in items" :key="item.userId">
+        <v-list-item>
+          <template v-slot:title>
+            <div v-html="item.userName"></div>
+          </template>
+          <template v-slot:append>
+            <v-btn color="grey-lighten-1" variant="outlined" @click="createChatRoom(item)">1:1대화하기</v-btn>
+          </template>
+        </v-list-item>
+
+        <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
+      </template>
     </v-list>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
-const emit = defineEmits(["click:room"])
-
-const roomName = ref("")
+import { useUserStore } from "@/store/user/user"
+import { User } from "@/types/user"
+import { onMounted, Ref, ref } from "vue"
 
 interface ChatItem {
   id: string
-  avatar: string
   roomName: string
 }
 
-let items: ChatItem[] = [
-  {
-    id: "1",
-    avatar: "https://picsum.photos/250/300?image=660",
-    roomName: "채팅방1"
-  },
-  {
-    id: "2",
-    avatar: "https://picsum.photos/250/300?image=821",
-    roomName: "채팅방2"
-  },
-  {
-    id: "3",
-    avatar: "https://picsum.photos/250/300?image=783",
-    roomName: "채팅방3"
-  },
-  {
-    id: "4",
-    avatar: "https://picsum.photos/250/300?image=1006",
-    roomName: "채팅방4"
-  }
-]
+const emit = defineEmits(["click:room"])
+
+const store = useUserStore()
+
+const items: Ref<User[]> = ref([])
 
 // 채팅방으로 이동
-const joinChatRoom = (item: ChatItem) => {
-  emit("click:room", item.id)
-  console.log(item.id)
+const createChatRoom = (item: User) => {
+  console.log(item.userId)
+  emit("click:room", item.userId)
 }
 
 // 채팅방 생성
-const createChatRoom = () => {
-  console.log("채팅방 생성")
+const createGroupChatRoom = () => {
+  console.log("사용자 선택 채팅방 생성")
 }
+
+const initApi = async () => {
+  await store.requestUserList()
+}
+
+onMounted(async () => {
+  await initApi()
+  items.value = store.getUsers().value
+})
 </script>

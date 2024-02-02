@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { requestSignIn, requestSignUp } from "@/axios/sign-service-axios"
+import { requestSignIn, requestSignOut, requestSignUp } from "@/axios/sign-service-axios"
 import { RequestSignIn, RequestSignUp } from "@/types/sign"
 
 export const useSignStore = defineStore("signStore", () => {
@@ -15,8 +15,13 @@ export const useSignStore = defineStore("signStore", () => {
     const { data } = await requestSignUp(body)
   }
 
+  const requestLogout = async () => {
+    const { data } = await requestSignOut()
+  }
+
   return {
     requestLogin,
-    requestJoin
+    requestJoin,
+    requestLogout
   }
 })
