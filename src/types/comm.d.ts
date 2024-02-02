@@ -6,4 +6,6 @@ declare interface BaseRes<T> {
 
 declare interface AxiosOption {
   error?: boolean //error alert 여부
+  loading?: boolean
+  useToken?: boolean
 }

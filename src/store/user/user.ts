@@ -1,22 +1,22 @@
 import { defineStore } from "pinia"
-import { requestSignIn, requestSignUp } from "@/axios/user-service-axios"
-import { RequestSignIn, RequestSignUp } from "@/types/user"
+import { ResponseUserList, User } from "@/types/user"
+import { getUserList } from "@/axios/user-service-axios"
+import { computed, ref, Ref } from "vue"
 
 export const useUserStore = defineStore("userStore", () => {
-  const requestLogin = async (value: RequestSignIn) => {
-    const { data } = await requestSignIn(value)
+  const users: Ref<User[]> = ref([])
 
-    localStorage.setItem("accessToken", data.accessToken)
-    localStorage.setItem("name", data.name)
-    localStorage.setItem("userId", data.id)
+  const requestUserList = async () => {
+    const { data } = await getUserList()
+
+    users.value = data.list
   }
 
-  const requestJoin = async (body: RequestSignUp) => {
-    const { data } = await requestSignUp(body)
-  }
+  const getUsers = () => computed(() => users.value)
 
+  //   const requestLogin = async (value: RequestSignIn) => {
   return {
-    requestLogin,
-    requestJoin
+    requestUserList,
+    getUsers
   }
 })

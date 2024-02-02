@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/store/user/user"
+import { useSignStore } from "@/store/sign/sign"
 import { mixedTypeAnnotation } from "@babel/types"
 import { onMounted, Ref, ref } from "vue"
 import { useRouter } from "vue-router"
@@ -36,7 +36,7 @@ import { VTextField } from "vuetify/lib/components/index.mjs"
 
 const emit = defineEmits(["changeStatus"])
 
-const store = useUserStore()
+const store = useSignStore()
 const router = useRouter()
 
 const idInput: Ref<VTextField | null> = ref(null)
@@ -54,7 +54,7 @@ const onClickLogin = async () => {
   try {
     await store.requestJoin({ userId: id.value, userPw: pw.value, name: name.value })
     alert("회원가입이 완료되었습니다. 로그인해주세요")
-    emit("changeStatus", "signIn")
+    onChangeSignIn()
   } catch (error: any) {
     if (error.code === "C007") {
       idInput.value?.focus()
