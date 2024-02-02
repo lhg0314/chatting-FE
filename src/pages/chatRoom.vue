@@ -1,6 +1,6 @@
 <template>
   <div class="chat-room-page">
-    <div class="chat-messages-container">
+    <div v-auto-scroll-bottom="messages" class="chat-messages-container">
       <ChatToolbar :roomName="roomName"> </ChatToolbar>
       <ChatMessage :messages="messages" />
     </div>
@@ -15,7 +15,7 @@
 import ChatToolbar from "@/components/chat/ChatToolbar.vue"
 import ChatMessage from "@/components/chat/ChatMessage.vue"
 import ChatInput from "@/components/chat/ChatInput.vue"
-import { computed, onMounted, Ref, ref } from "vue"
+import { computed, onMounted, onUpdated, Ref, ref } from "vue"
 import { useRoute } from "vue-router"
 import SockJS from "sockjs-client"
 import { stompClient } from "@/socket/socket-service"
@@ -60,7 +60,7 @@ const initailize = () => {
 
           let response = JSON.parse(res.body).data
           messages.value.push(response)
-          console.log("messages >> ", messages)
+          console.log("messages >> ", messages.value)
         },
         headers
       )
@@ -114,7 +114,12 @@ const sendMessage = (msg: String) => {
 //   }
 // ]
 
-onMounted(() => initailize())
+onMounted(() => {
+  console.log("onMounted")
+  initailize()
+})
+
+onUpdated(() => console.log("onUpdated"))
 </script>
 
 <style lang="scss" scoped>
@@ -126,6 +131,7 @@ onMounted(() => initailize())
     left: 0;
     right: 0;
     bottom: 75px;
+    overflow-x: scroll;
   }
   .chat-message-input {
     position: absolute;
