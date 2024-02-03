@@ -4,6 +4,12 @@
 
 로그인한 사용자가 참여하는 채팅방 목록
 
+id3 채팅방 목록
+![소켓연결](/public/img/채팅목록id3지원.PNG)
+<br>
+id4 채팅방 목록
+![소켓연결](/public/img/채팅목록id4혜정.PNG)
+
 ## 채팅방
 
 ### 1. 소켓 연결
@@ -36,7 +42,7 @@ stompClient.connect(
 )
 ```
 
-![소켓연결]()
+![소켓연결](/public/img/소켓연결성공.PNG)
 
 ### 2. 토픽 구독
 
@@ -55,7 +61,7 @@ stompClient.subscribe(
 )
 ```
 
-![토픽구독]()
+![토픽구독](/public/img/구독.PNG)
 
 ### 2. 메세지 전송
 
@@ -71,5 +77,9 @@ const body = {
 stompClient.send("/pub/chat/" + roomId.value, JSON.stringify(body))
 ```
 
-![메세지전송]()<br>
-![메세지받기]()
+![채팅방](/public/img/채팅방.PNG)<br>
+
+id3 -> id4 메세지 전송
+![메세지전송](/public/img/메세지전송.PNG)<br>
+id4 메세지 받음 <br>
+![메세지받기](/public/img/메세지받기.PNG)
