@@ -1,20 +1,16 @@
 import { defineStore } from "pinia"
-import { requestChatRoomList } from "@/axios/chat-service-axios"
+import { requestChatRoomList, requestMessageList } from "@/axios/chat-service-axios"
 import { Ref, computed, ref } from "vue"
-import { cloneDeep } from "@babel/types"
-import { i } from "unplugin-vue-router/dist/options-8dbadba3"
-
-interface IChatRoom {
-  roomId?: number
-  roomName?: string
-}
+import { IChatRoom, IMessage, RequestMessageList } from "@/types/chat"
 
 export const useChatStore = defineStore("chatStore", () => {
-  //const chatRoomList = ref(cloneDeep(initChatRoomList))
   const chatRoomList: Ref<IChatRoom[]> = ref([])
+  const messageList: Ref<IMessage[]> = ref([])
 
   const getChatRoomList = computed(() => chatRoomList.value)
+  const getMessageList = computed(() => messageList.value)
 
+  // 채팅방 목록 조회
   const requestChatRoom = async (userId: string) => {
     const { data } = await requestChatRoomList(userId)
     console.log("data > ", data)
@@ -22,8 +18,17 @@ export const useChatStore = defineStore("chatStore", () => {
     console.log("chatRoomList > ", chatRoomList.value)
   }
 
+  // 채팅메세지 조회
+  const requestMessage = async (body: RequestMessageList) => {
+    const { data } = await requestMessageList(body)
+    console.log("data > ", data)
+    messageList.value = data.msgList
+  }
+
   return {
     requestChatRoom,
-    getChatRoomList
+    requestMessage,
+    getChatRoomList,
+    getMessageList
   }
 })

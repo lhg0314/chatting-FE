@@ -23,14 +23,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref, watch } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 import { getUserId } from "@/axios/apiUtil"
 
 const props = defineProps(["messages"])
-const messages = ref(props.messages)
+//const messages = ref(props.messages)
 const userId = ref(getUserId())
 
 console.log("props.messages >>> ", props.messages)
+
+const messages = computed(() => {
+  return props.messages
+})
 </script>
 
 <style lang="scss" scoped>
