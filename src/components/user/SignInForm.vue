@@ -28,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/store/user/user"
+import { getAccessToken } from "@/axios/apiUtil"
+import { useSignStore } from "@/store/sign/sign"
 import { onMounted, Ref, ref } from "vue"
 import { useRouter } from "vue-router"
 import { VTextField } from "vuetify/lib/components/index.mjs"
@@ -42,14 +43,14 @@ const pw = ref("")
 
 const visible = ref(false)
 
-const store = useUserStore()
+const store = useSignStore()
 const router = useRouter()
 
 const onClickLogin = async () => {
   try {
     await store.requestLogin({ userId: id.value, userPw: pw.value })
-    router.push({
-      name: "/chatHome"
+    router.replace({
+      name: "/userList"
     })
   } catch (error: any) {
     console.log(error)

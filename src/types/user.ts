@@ -1,19 +1,8 @@
-export interface RequestSignUp {
+export interface User {
   userId: string
-  userPw: string
-  name: string
+  userName: string
 }
 
-export interface ResponseSignUp {}
-
-export interface RequestSignIn {
-  userId: string
-  userPw: string
-}
-// BaseRes<ResponseSignIn>
-export interface ResponseSignIn {
-  id: string
-  accessToken: string
-  refreshToken: string
-  name: string
+export interface ResponseUserList {
+  list: User[]
 }

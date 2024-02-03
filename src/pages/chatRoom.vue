@@ -1,6 +1,6 @@
 <template>
   <div class="chat-room-page">
-    <div class="chat-messages-container">
+    <div v-auto-scroll-bottom="messages" class="chat-messages-container" ref="test" @scroll="scrolling">
       <ChatToolbar :roomName="roomName"> </ChatToolbar>
       <ChatMessage :messages="messages" />
     </div>
@@ -15,17 +15,20 @@
 import ChatToolbar from "@/components/chat/ChatToolbar.vue"
 import ChatMessage from "@/components/chat/ChatMessage.vue"
 import ChatInput from "@/components/chat/ChatInput.vue"
-import { computed, onMounted, Ref, ref } from "vue"
+import { computed, onMounted, onUpdated, Ref, ref } from "vue"
 import { useRoute } from "vue-router"
 import SockJS from "sockjs-client"
 import { stompClient } from "@/socket/socket-service"
-import { getAccessToken } from "@/axios/apiUtil"
+import { getAccessToken, getUserId } from "@/axios/apiUtil"
+import { useChatStore } from "@/store/chat/chat"
 
 const route = useRoute()
+const store = useChatStore()
 const emits = defineEmits(["send:message"])
 
 const roomId = ref() // 채팅방 번호
 const roomName = ref(route.query.roomName) // 채팅방 이름
+const test = ref()
 
 interface IMessage {
   createAt?: string
@@ -35,13 +38,15 @@ interface IMessage {
   roomId?: number
   userId?: string
 }
-const messages: Ref<IMessage[]> = ref([])
+const message: Ref<IMessage[]> = ref([])
+const messages = computed(() => [...message.value])
 
 const initailize = () => {
   console.log("query >>> ", route.query)
   roomId.value = route.query.roomId
   //roomName.value = route.query.roomName
 
+  //initApi()
   const accessToken = getAccessToken()
   const headers: any = { Authorization: accessToken }
   stompClient.connect(
@@ -57,10 +62,8 @@ const initailize = () => {
         (res) => {
           // 새로운 메시지 도착 시 실행되는 콜백 함수
           console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
-
-          let response = JSON.parse(res.body).data
-          messages.value.push(response)
-          console.log("messages >> ", messages)
+          message.value.push(JSON.parse(res.body).data)
+          console.log("messages >> ", message.value)
         },
         headers
       )
@@ -73,11 +76,22 @@ const initailize = () => {
   )
 }
 
-const sendMessage = (msg: String) => {
-  // 메세지 전송
+const initApi = async () => {
+  // 채팅메세지 조회
   const body = {
     roomId: roomId.value,
-    userId: "id3",
+    pageNum: 1,
+    cnt: 10
+  }
+  await store.requestMessage(body)
+}
+
+const sendMessage = (msg: String) => {
+  // 메세지 전송
+  const userId = getUserId()
+  const body = {
+    roomId: roomId.value,
+    userId: userId,
     message: msg,
     messageType: typeof msg == "string" ? "TALK" : "FILE"
   }
@@ -113,7 +127,33 @@ const sendMessage = (msg: String) => {
 //   }
 // ]
 
-onMounted(() => initailize())
+const scrolling = (event: any) => {
+  const scrollHeight = event.target.scrollHeight
+  const scrollTop = event.target.scrollTop
+  const clientHeight = event.target.clientHeight
+
+  console.log("aaascrollHeight ", scrollHeight)
+  console.log("aaascrollTop ", scrollTop)
+  console.log("aaaclientHeight ", clientHeight)
+
+  const isAtTheBottom = scrollTop === 0
+
+  if (isAtTheBottom) {
+    // setTimeout(() => chatMessage(), 1000)
+    // 최상단으로 이동했을때
+  }
+}
+
+onMounted(() => {
+  //test.value.addEventListener("scroll", doScroll)
+  initailize()
+})
+
+onUpdated(() => {
+  // const div = test.value as HTMLDivElement
+  // div.scrollTop = div.scrollHeight
+  console.log("onUpdated")
+})
 </script>
 
 <style lang="scss" scoped>
@@ -125,6 +165,7 @@ onMounted(() => initailize())
     left: 0;
     right: 0;
     bottom: 75px;
+    overflow-x: scroll;
   }
   .chat-message-input {
     position: absolute;
