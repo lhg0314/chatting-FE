@@ -13,11 +13,14 @@
 <script lang="ts" setup>
 import { clearTokenInfo } from "@/axios/apiUtil"
 import { useAppStore } from "@/store/comm"
+import { useSignStore } from "@/store/sign/sign"
 import { useRouter } from "vue-router"
 const store = useAppStore()
+const signStore = useSignStore()
 const router = useRouter()
 
-const logout = () => {
+const logout = async () => {
+  await signStore.requestLogout()
   clearTokenInfo()
   router.push({
     name: "/signIn"

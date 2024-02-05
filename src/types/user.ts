@@ -6,3 +6,14 @@ export interface User {
 export interface ResponseUserList {
   list: User[]
 }
+
+export interface RequestCreateChat {
+  roomName: string
+  userId: string[]
+}
+
+export interface ResponseCreateChat {
+  roomId: string
+  existRoom: boolean
+  roomList: []
+}
