@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 import { requestTestApi, requestLogin, requestUserList } from "@/axios/docs-service-axios"
 
-export const useAppStore = defineStore("app", () => {
+export const useDocsStore = defineStore("docs", () => {
   const testRef: any = ref({})
 
   const requestLoginFunction = async () => {

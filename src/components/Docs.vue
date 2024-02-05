@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from "@/store/docs"
+import { useDocsStore } from "@/store/docs"
 import { useRoute, useRouter } from "vue-router"
 
 import Stomp from "webstomp-client"
@@ -68,7 +68,7 @@ import axios from "axios"
 const router = useRouter()
 const route = useRoute()
 
-const store = useAppStore()
+const store = useDocsStore()
 
 const testFn = async () => {
   store.requestLoginFunction()
