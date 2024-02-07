@@ -70,12 +70,13 @@ const checkedItem = (user: UserItem) => {
 
 const confirmCreateChat = async () => {
   const selectedUsers = [...items.value.filter(({ isChecked }) => isChecked)]
+  const myInfoObj = store.getUsers().value.find(({ userId }) => userId === getUserId())
   if (!selectedUsers.length) {
     alert("사용자를 1명 이상 선택해주세요.")
     return
   }
 
-  emit("createRoom", selectedUsers)
+  emit("createRoom", [myInfoObj, ...selectedUsers])
 }
 
 const initApi = async () => {
