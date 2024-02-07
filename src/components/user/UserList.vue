@@ -18,7 +18,7 @@
             </v-list-item-action>
           </template>
           <template v-slot:title>
-            <div v-html="item.userName"></div>
+            <div>{{ item.userName }}({{ item.userId }})</div>
           </template>
           <template v-slot:append>
             <v-btn color="grey-lighten-1" variant="outlined" @click="createChatRoom(item)" v-if="!creatingChat">1:1대화하기</v-btn>
@@ -42,7 +42,7 @@ interface UserItem extends User {
   isChecked: boolean
 }
 
-const emit = defineEmits(["click:room"])
+const emit = defineEmits(["click:room", "createRoom"])
 const router = useRouter()
 const store = useUserStore()
 
@@ -53,7 +53,7 @@ const creatingChat: Ref<boolean> = ref(false)
 // 채팅방으로 이동
 const createChatRoom = (item: User) => {
   console.log(item.userId)
-  emit("click:room", item.userId)
+  emit("click:room", item)
 }
 
 // 채팅방 생성
@@ -69,27 +69,13 @@ const checkedItem = (user: UserItem) => {
 }
 
 const confirmCreateChat = async () => {
-  const selectedUsers = items.value.filter(({ isChecked }) => isChecked)
+  const selectedUsers = [...items.value.filter(({ isChecked }) => isChecked)]
   if (!selectedUsers.length) {
     alert("사용자를 1명 이상 선택해주세요.")
     return
   }
-  const usersNameStr = selectedUsers.map(({ userName }) => userName).join("\n")
-  if (confirm(`${usersNameStr}\n이대로 채팅방을 만드시겠습니까?`)) {
-    const userId = [...selectedUsers.map(({ userId }) => userId), getUserId()]
-    try {
-      const res = await store.requestCreateChatting({ roomName: "testRoom", userId })
-      router.push({
-        name: "/chatRoom",
-        query: {
-          roomId: res.roomId,
-          roomName: "testRoom"
-        }
-      })
-    } catch {
-      alert("다시 시도해주세요")
-    }
-  }
+
+  emit("createRoom", selectedUsers)
 }
 
 const initApi = async () => {
@@ -98,6 +84,10 @@ const initApi = async () => {
 
 onMounted(async () => {
   await initApi()
-  items.value = store.getUsers().value.map((item: User) => ({ ...item, ...{ isChecked: false } }))
+  //자신 제외 후 체크 옵션 추가
+  items.value = store
+    .getUsers()
+    .value.filter(({ userId }) => userId !== getUserId())
+    .map((item: User) => ({ ...item, ...{ isChecked: false } }))
 })
 </script>
