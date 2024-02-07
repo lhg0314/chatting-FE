@@ -1,9 +1,9 @@
 <template>
   <v-layout class="chat-messages" row wrap>
     <v-flex v-for="(item, index) in messages" :key="index" xs12>
-      <v-card v-if="item.msgType === 'system'" class="chat-system-message" color="grey-lighten-2" flat>
+      <v-card v-if="item.messageType === 'EXIT'" class="chat-system-message" color="grey-lighten-2" flat>
         <v-card-text class="text-grey-darken-1">
-          {{ item.msg }}
+          {{ item.message }}
         </v-card-text>
       </v-card>
 
@@ -15,7 +15,7 @@
         <!-- <v-img v-if="item.type === 'image'" :src="item.imageUrl" class="chat-image" max-width="400px" contain></v-img> -->
 
         <v-card-text class="chat-message">
-          {{ item.msg }}
+          {{ item.message }}
         </v-card-text>
       </v-card>
     </v-flex>

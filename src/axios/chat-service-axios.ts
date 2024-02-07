@@ -9,7 +9,7 @@ const requestChatRoomList = async (userId: string): Promise<BaseRes<ResponseChat
 }
 
 const requestMessageList = async (body: RequestMessageList): Promise<BaseRes<ResponseMessageList>> => {
-  const { data } = await chatService.get("/chat/messageList", { params: body })
+  const { data } = await chatService.post("/chat/messageList", body)
   return data
 }
 
