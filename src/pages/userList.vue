@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getUserId } from "@/axios/apiUtil"
+import { getUserId, getUserName } from "@/axios/apiUtil"
 import UserList from "@/components/user/UserList.vue"
 import UsersConfirmDialog from "@/components/user/UsersConfirmDialog.vue"
 import { useUserStore } from "@/store/user/user"
@@ -30,7 +30,7 @@ const dialog = ref()
 
 const joinChatRoom = ({ userId, userName }: User) => {
   // 채팅룸으로 이동
-  createChatRoom({ roomName: userName, userId: [userId] })
+  createChatRoom({ roomName: `${getUserName()}, ${userName}`, userId: [getUserId(), userId] })
   // router.push({ name: "/chatRoom", query: { roomId: roomId } })
 }
 
@@ -40,7 +40,7 @@ const selectUsers = async (value: User[]) => {
 }
 
 const confirmDialog = async (roomName: string) => {
-  const userId = [...selectedUsers.value.map(({ userId }) => userId), getUserId()]
+  const userId = selectedUsers.value.map(({ userId }) => userId)
   createChatRoom({ roomName, userId })
 }
 
