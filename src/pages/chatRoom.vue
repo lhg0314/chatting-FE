@@ -21,9 +21,11 @@ import SockJS from "sockjs-client"
 import { stompClient } from "@/socket/socket-service"
 import { getAccessToken, getUserId } from "@/axios/apiUtil"
 import { useChatStore } from "@/store/chat/chat"
+import { storeToRefs } from "pinia"
 
 const route = useRoute()
 const store = useChatStore()
+const { getMessageList } = storeToRefs(store)
 const emits = defineEmits(["send:message"])
 
 const roomId = ref() // 채팅방 번호
@@ -41,12 +43,11 @@ interface IMessage {
 const message: Ref<IMessage[]> = ref([])
 const messages = computed(() => [...message.value])
 
-const initailize = () => {
+const initailize = async () => {
   console.log("query >>> ", route.query)
   roomId.value = route.query.roomId
   //roomName.value = route.query.roomName
 
-  //initApi()
   const accessToken = getAccessToken()
   const headers: any = { Authorization: accessToken }
   stompClient.connect(
@@ -74,14 +75,17 @@ const initailize = () => {
       //connected = false
     }
   )
+
+  await initApi()
+  message.value = getMessageList.value
 }
 
 const initApi = async () => {
   // 채팅메세지 조회
   const body = {
     roomId: roomId.value,
-    pageNum: 1,
-    cnt: 10
+    chatId: 0,
+    cnt: 7
   }
   await store.requestMessage(body)
 }
