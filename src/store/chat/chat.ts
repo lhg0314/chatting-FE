@@ -22,27 +22,30 @@ export const useChatStore = defineStore("chatStore", () => {
   const requestMessage = async (body: RequestMessageList) => {
     const { data } = await requestMessageList(body)
     console.log("data > ", data)
-    messageList.value = data.msgList
+    messageList.value = messageList.value.concat(data.msgList)
     console.log("messageList.value", messageList.value)
 
     const requestBody = {
       // chatId: 이전 목록 리스트에서 마지막 chatId
-      roomId: messageList.value[data.msgList.length - 1].roomId,
-      chatId: messageList.value[data.msgList.length - 1].chatId,
+      roomId: data.msgList[data.msgList.length - 1].roomId,
+      chatId: data.msgList[data.msgList.length - 1].chatId,
       cnt: 7
     }
     if (data.nextYn == "Y") {
-      const { data } = await requestMessageList(requestBody)
-      console.log("data2 > ", data)
-      messageList.value = messageList.value.concat(data.msgList)
-      console.log("messageList", messageList.value)
+      await requestMessage(requestBody)
     }
+  }
+
+  // 초기화
+  const initMessage = () => {
+    messageList.value = []
   }
 
   return {
     requestChatRoom,
     requestMessage,
     getChatRoomList,
-    getMessageList
+    getMessageList,
+    initMessage
   }
 })

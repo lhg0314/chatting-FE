@@ -10,6 +10,9 @@ export const getAccessToken = () => {
 export const getUserId = () => {
   return localStorage.getItem("userId") || ""
 }
+export const getUserName = () => {
+  return localStorage.getItem("name") || ""
+}
 
 export const clearTokenInfo = () => {
   localStorage.removeItem("accessToken")

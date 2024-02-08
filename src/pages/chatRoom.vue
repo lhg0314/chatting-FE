@@ -53,8 +53,6 @@ const initailize = async () => {
   stompClient.connect(
     headers,
     (frame) => {
-      // 소켓 연결 성공
-      let connected = true
       console.log("소켓 연결 성공", frame)
       // 서버의 메시지 전송 endpoint를 구독합니다.
       // 이런형태를 pub sub 구조라고 합니다.
@@ -70,13 +68,13 @@ const initailize = async () => {
       )
     },
     (error) => {
-      // 소켓 연결 실패
       console.log("소켓 연결 실패", error)
-      //connected = false
     }
   )
 
+  store.initMessage()
   await initApi()
+  console.log("메세지조회")
   message.value = getMessageList.value
 }
 
@@ -103,42 +101,14 @@ const sendMessage = (msg: String) => {
   msg = ""
 }
 
-// interface messageItem {
-//   isOwn: boolean
-//   type: string
-//   message: string
-//   username: string
-// }
-
-// let messages: messageItem[] = [
-//   {
-//     isOwn: false,
-//     username: "",
-//     type: "system",
-//     message: "혜정 joined"
-//   },
-//   {
-//     isOwn: true,
-//     type: "message",
-//     message: "안녕 지원",
-//     username: "혜정"
-//   },
-//   {
-//     isOwn: false,
-//     type: "message",
-//     message: "안녕 혜정",
-//     username: "지원"
-//   }
-// ]
-
 const scrolling = (event: any) => {
   const scrollHeight = event.target.scrollHeight
   const scrollTop = event.target.scrollTop
   const clientHeight = event.target.clientHeight
 
-  console.log("aaascrollHeight ", scrollHeight)
-  console.log("aaascrollTop ", scrollTop)
-  console.log("aaaclientHeight ", clientHeight)
+  //console.log("aaascrollHeight ", scrollHeight)
+  //console.log("aaascrollTop ", scrollTop)
+  //console.log("aaaclientHeight ", clientHeight)
 
   const isAtTheBottom = scrollTop === 0
 
