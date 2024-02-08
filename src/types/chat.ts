@@ -35,4 +35,6 @@ export interface IMessage {
   readYn?: string
   roomId?: number
   userId?: string
+  users?: string[]
+  readCnt: number
 }
