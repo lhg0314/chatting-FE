@@ -48,29 +48,36 @@ const initailize = async () => {
   let socket = new SockJS(serverURL)
   stompClient = Stomp.over(socket)
 
-  await stompClient.connect(
-    headers,
-    (frame) => {
-      console.log("소켓 연결 성공", frame)
-      // 서버의 메시지 전송 endpoint를 구독합니다.
-      stompClient.subscribe(
-        "/sub/room/" + roomId.value,
-        (res) => {
-          // 새로운 메시지 도착 시 실행되는 콜백 함수
-          console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
-          message.value.push(JSON.parse(res.body).data)
-          console.log("messages >> ", message.value)
-        },
-        headers
-      )
-    },
-    (error) => {
-      console.log("소켓 연결 실패", error)
-    }
-  )
+  new Promise((resolve, reject) => {
+    stompClient?.connect(
+      headers,
+      (frame) => {
+        console.log("소켓 연결 성공", frame)
+        // 서버의 메시지 전송 endpoint를 구독합니다.
+        stompClient?.subscribe(
+          "/sub/room/" + roomId.value,
+          (res) => {
+            // 새로운 메시지 도착 시 실행되는 콜백 함수
+            console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
+            message.value.push(JSON.parse(res.body).data)
+            console.log("messages >> ", message.value)
 
-  await requestMessageList()
-  message.value = getMessageList.value
+            resolve(message)
+          },
+          headers
+        )
+        // 입장메세지
+        enterMessage()
+      },
+      (error) => {
+        console.log("소켓 연결 실패", error)
+      }
+    )
+  }).then(async () => {
+    store.initMessage()
+    await requestMessageList()
+    message.value = getMessageList.value
+  })
 }
 
 // 메세지 조회
@@ -83,6 +90,17 @@ const requestMessageList = async () => {
   await store.requestMessage(body)
 }
 
+// 입장 메세지
+const enterMessage = () => {
+  const body = {
+    roomId: roomId.value,
+    userId: getUserId(),
+    message: "",
+    messageType: "ENTER"
+  }
+  stompClient?.send("/pub/chat/" + roomId.value, JSON.stringify(body))
+}
+
 // 메세지 전송
 const sendMessage = (msg: String) => {
   const userId = getUserId()
@@ -92,7 +110,7 @@ const sendMessage = (msg: String) => {
     message: msg,
     messageType: typeof msg == "string" ? "TALK" : "FILE"
   }
-  stompClient.send("/pub/chat/" + roomId.value, JSON.stringify(body))
+  stompClient?.send("/pub/chat/" + roomId.value, JSON.stringify(body))
   msg = ""
 }
 
@@ -120,7 +138,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   console.log("소켓 연결 해제")
-  stompClient.disconnect()
+  stompClient?.disconnect()
 })
 
 onUpdated(() => {
