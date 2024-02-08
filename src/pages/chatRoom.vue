@@ -59,9 +59,20 @@ const initailize = async () => {
           (res) => {
             // 새로운 메시지 도착 시 실행되는 콜백 함수
             console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
-            message.value.push(JSON.parse(res.body).data)
+
+            const resMessage = JSON.parse(res.body).data
+            message.value.push(resMessage)
             console.log("messages >> ", message.value)
 
+            // 상대방 입장했을때 readCnt -1
+            if (resMessage.messageType == "ENTER" && resMessage.userId != getUserId()) {
+              message.value.forEach((el) => {
+                if (el.users?.includes(resMessage.userId)) {
+                  el.users.push(resMessage.userId)
+                  el.readCnt = el.readCnt - 1
+                }
+              })
+            }
             resolve(message)
           },
           headers

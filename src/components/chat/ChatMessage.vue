@@ -15,6 +15,7 @@
         <v-card-text class="chat-message">
           {{ item.message }}
         </v-card-text>
+        <p :class="item.userId == userId ? 'read-cnt-right' : 'read-cnt-left'">{{ item.readCnt }}</p>
       </v-card>
     </v-flex>
   </v-layout>
@@ -41,16 +42,13 @@ const messages = computed(() => {
   .chat-username {
     padding-bottom: 0;
   }
-
   .chat-message {
     padding-top: 0;
     word-wrap: break-word;
   }
-
   .chat-image {
     margin: 0 16px;
   }
-
   .chat-message-box {
     border-color: #e0e0e0 !important;
     border-radius: 1rem;
@@ -58,15 +56,28 @@ const messages = computed(() => {
     max-width: 60%;
     margin: 5px;
   }
-
   .chat-right {
     background-color: #81d4fa !important;
     float: right;
   }
-
   .chat-left {
     background-color: #c5e1a5 !important;
     float: left;
+  }
+  .read-cnt-right {
+    display: inline;
+    position: absolute;
+    bottom: 0;
+    left: -13px;
+  }
+  .read-cnt-left {
+    display: inline;
+    position: absolute;
+    bottom: 0;
+    right: -13px;
+  }
+  .v-card {
+    overflow: visible;
   }
 }
 </style>
