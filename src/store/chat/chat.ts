@@ -36,10 +36,16 @@ export const useChatStore = defineStore("chatStore", () => {
     }
   }
 
+  // 초기화
+  const initMessage = () => {
+    messageList.value = []
+  }
+
   return {
     requestChatRoom,
     requestMessage,
     getChatRoomList,
-    getMessageList
+    getMessageList,
+    initMessage
   }
 })
