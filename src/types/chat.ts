@@ -13,7 +13,7 @@ export interface RequestMessageList {
   cnt: number // 조회 개수
 }
 
-export interface IMessage {
+export interface IMessageList {
   chatId: number
   roomId: number
   userId: string
@@ -25,5 +25,14 @@ export interface IMessage {
 
 export interface ResponseMessageList {
   nextYn: string
-  msgList: IMessage[]
+  msgList: IMessageList[]
+}
+
+export interface IMessage {
+  createAt?: string
+  msg?: string
+  msgType?: string
+  readYn?: string
+  roomId?: number
+  userId?: string
 }
