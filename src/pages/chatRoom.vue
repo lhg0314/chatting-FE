@@ -72,7 +72,9 @@ const initailize = async () => {
     }
   )
 
+  store.initMessage()
   await initApi()
+  console.log("메세지조회")
   message.value = getMessageList.value
 }
 
