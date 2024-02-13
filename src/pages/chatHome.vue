@@ -1,3 +1,11 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true
+  }
+}
+</route>
+
 <template>
   <ChatRoomList @click:room="joinChatRoom" />
 </template>

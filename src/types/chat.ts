@@ -1,6 +1,10 @@
 export interface IChatRoom {
   roomId: number
   roomName: string
+  participantsCount: number
+  unreadMessages: number
+  lastMessage: string
+  lastMessageDate: string
 }
 
 export interface ResponseChatRoom {
