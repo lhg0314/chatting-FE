@@ -1,5 +1,5 @@
 import axios from "./base-axios"
-import { RequestMessageList, ResponseChatRoom, ResponseMessageList } from "@/types/chat"
+import { RequestDeleteChatting, RequestMessageList, ResponseChatRoom, ResponseMessageList } from "@/types/chat"
 
 const chatService = axios()
 const chatListService = axios({ loading: false })
@@ -14,4 +14,9 @@ const requestMessageList = async (body: RequestMessageList): Promise<BaseRes<Res
   return data
 }
 
-export { requestChatRoomList, requestMessageList }
+const requestDeleteChatting = async (body: RequestDeleteChatting) => {
+  const { data } = await chatService.post("/chat/leave", body)
+  return data
+}
+
+export { requestChatRoomList, requestMessageList, requestDeleteChatting }
