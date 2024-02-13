@@ -71,7 +71,6 @@ const initailize = async () => {
             setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 100)
 
             // 상대방 입장했을때 readCnt -1
-            debugger
             if (resMessage.messageType == "ENTER" && resMessage.userId != getUserId()) {
               message.value.forEach((el) => {
                 if (!el.users?.includes(resMessage.userId)) {
