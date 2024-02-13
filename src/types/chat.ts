@@ -42,3 +42,9 @@ export interface IMessage {
   users?: string[]
   readCnt: number
 }
+
+export interface RequestDeleteChatting {
+  userId: string
+  roomId: number
+  roomState: string
+}
