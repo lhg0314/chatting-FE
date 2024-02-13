@@ -1,6 +1,6 @@
 <template>
   <v-layout class="chat-messages" row wrap>
-    <v-flex v-for="(item, index) in messages" :key="index" xs12>
+    <v-flex v-for="(item, index) in messages.slice().reverse()" :key="index" xs12>
       <v-card v-if="item.messageType === 'ENTER'" class="chat-system-message" color="grey-lighten-2" flat>
         <v-card-text class="text-grey-darken-1"> {{ item.userId }} 님이 입장했습니다. </v-card-text>
       </v-card>
@@ -15,7 +15,7 @@
         <v-card-text class="chat-message">
           {{ item.message }}
         </v-card-text>
-        <p :class="item.userId == userId ? 'read-cnt-right' : 'read-cnt-left'">{{ item.readCnt }}</p>
+        <p :class="item.userId == userId ? 'read-cnt-right' : 'read-cnt-left'" v-if="item.readCnt != 0">{{ item.readCnt }}</p>
       </v-card>
     </v-flex>
   </v-layout>

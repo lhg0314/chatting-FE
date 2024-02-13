@@ -2,9 +2,10 @@ import axios from "./base-axios"
 import { RequestMessageList, ResponseChatRoom, ResponseMessageList } from "@/types/chat"
 
 const chatService = axios()
+const chatListService = axios({ loading: false })
 
 const requestChatRoomList = async (userId: string): Promise<BaseRes<ResponseChatRoom>> => {
-  const { data } = await chatService.get("/chat/roomList", { params: { userId: userId } })
+  const { data } = await chatListService.get("/chat/roomList", { params: { userId: userId } })
   return data
 }
 

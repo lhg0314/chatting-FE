@@ -1,21 +1,21 @@
 <template>
   <v-card color="grey-lighten-4" class="mx-auto" max-width="800">
     <v-toolbar color="#42b983" dark>
-      <v-btn slot="prepend" icon @click="onClickGoHome">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
       <v-toolbar-title>채팅방 목록</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn>
     </v-toolbar>
 
     <v-list lines="two">
-      <v-list-item v-for="item in roomList" :key="item.roomName" :prepend-avatar="item.avatar" ripple @click="joinChatRoom(item)">
+      <v-list-item v-for="item in roomList" :key="item.roomName" ripple @click="joinChatRoom(item)">
         <template v-slot:title>
           <div v-html="item.roomName"></div>
+        </template>
+        <template v-slot:subtitle>
+          <div v-html="item.lastMessage"></div>
+        </template>
+        <template v-slot:append>
+          <v-chip v-if="item.unreadMessages" variant="flat" color="red" size="x-small"> {{ item.unreadMessages }} </v-chip>
         </template>
       </v-list-item>
     </v-list>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { useChatStore } from "@/store/chat/chat"
 import { storeToRefs } from "pinia"
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref } from "vue"
 import { IChatRoom } from "@/types/chat"
 import { useRouter } from "vue-router"
 import { getUserId } from "@/axios/apiUtil"
@@ -37,9 +37,14 @@ const store = useChatStore()
 const { getChatRoomList } = storeToRefs(store)
 const roomName = ref("")
 
+let requestInterv: null | NodeJS.Timeout = null
+
 const initailize = async () => {
   const userId: string = getUserId()
-  await store.requestChatRoom(userId) // 채팅방 목록
+  await store.requestChatRoom(userId)
+  requestInterv = setInterval(async () => {
+    await store.requestChatRoom(userId) // 채팅방 목록
+  }, 3000)
 }
 
 const roomList = computed(() => getChatRoomList.value)
@@ -50,12 +55,11 @@ const joinChatRoom = (item: IChatRoom) => {
   console.log(item.roomId, item.roomName)
 }
 
-// 홈으로 이동
-const onClickGoHome = () => {
-  router.push("/")
-}
-
 onMounted(() => initailize())
+
+onUnmounted(() => {
+  if (requestInterv) clearInterval(requestInterv)
+})
 
 // interface ChatItem {
 //   id: string

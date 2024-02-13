@@ -1,6 +1,6 @@
 <template>
   <div class="chat-room-page">
-    <div v-auto-scroll-bottom="messages" class="chat-messages-container" ref="test" @scroll="scrolling">
+    <div v-auto-scroll-bottom="messages" class="chat-messages-container" ref="scrollRef" @scroll="scrolling">
       <ChatToolbar :roomName="roomName"> </ChatToolbar>
       <ChatMessage :messages="messages" />
     </div>
@@ -15,7 +15,7 @@
 import ChatToolbar from "@/components/chat/ChatToolbar.vue"
 import ChatMessage from "@/components/chat/ChatMessage.vue"
 import ChatInput from "@/components/chat/ChatInput.vue"
-import { computed, onMounted, onUnmounted, onUpdated, Ref, ref } from "vue"
+import { computed, onMounted, onUnmounted, onUpdated, Ref, ref, nextTick } from "vue"
 import { useRoute } from "vue-router"
 //import SockJS from "sockjs-client"
 //import { stompClient } from "@/socket/socket-service"
@@ -28,15 +28,16 @@ import { IMessage } from "@/types/chat"
 
 const route = useRoute()
 const store = useChatStore()
-const { getMessageList } = storeToRefs(store)
+const { getMessageList, getRes, getNextYn } = storeToRefs(store)
 const emits = defineEmits(["send:message"])
 
-const test = ref()
+const scrollRef = ref()
 const roomId = ref() // 채팅방 번호
 const roomName = ref(route.query.roomName) // 채팅방 이름
 let stompClient: Client | null = null
 const message: Ref<IMessage[]> = ref([]) // 보낸 채팅
 const messages = computed(() => [...message.value])
+const previousScrollHeight = ref()
 
 const initailize = async () => {
   console.log("query >>> ", route.query.roomId)
@@ -54,6 +55,7 @@ const initailize = async () => {
       (frame) => {
         console.log("소켓 연결 성공", frame)
         // 서버의 메시지 전송 endpoint를 구독합니다.
+
         stompClient?.subscribe(
           "/sub/room/" + roomId.value,
           (res) => {
@@ -61,14 +63,18 @@ const initailize = async () => {
             console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
             const resMessage = JSON.parse(res.body).data
-            message.value.push(resMessage)
+            message.value.unshift(resMessage)
             console.log("messages >> ", message.value)
+
+            let chatMessages = scrollRef.value
+            // 스크롤 최하단으로 이동
+            setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 100)
 
             // 상대방 입장했을때 readCnt -1
             if (resMessage.messageType == "ENTER" && resMessage.userId != getUserId()) {
               message.value.forEach((el) => {
-                if (el.users?.includes(resMessage.userId)) {
-                  el.users.push(resMessage.userId)
+                if (!el.users?.includes(resMessage.userId)) {
+                  el.users?.push(resMessage.userId)
                   el.readCnt = el.readCnt - 1
                 }
               })
@@ -80,14 +86,33 @@ const initailize = async () => {
         // 입장메세지
         enterMessage()
       },
-      (error) => {
-        console.log("소켓 연결 실패", error)
+      async (error: any) => {
+        if (error.body !== undefined) {
+          console.log("소켓 연결 실패", JSON.parse(error.body))
+          const resErr = JSON.parse(error.body)
+          console.log("resErr", resErr)
+          if (resErr?.code === "C008") {
+            store.initMessage()
+            await requestMessageList() // access 토큰 만료되면  API조회 (accessToken 재발급)
+            message.value = getMessageList.value
+
+            await initailize()
+          }
+        }
       }
     )
   }).then(async () => {
     store.initMessage()
+    console.log("메세지조회")
     await requestMessageList()
     message.value = getMessageList.value
+
+    nextTick(() => {
+      let chatMessages = scrollRef.value
+      // 스크롤 최하단으로 이동
+      chatMessages.scrollTo({ top: chatMessages.scrollHeight })
+      previousScrollHeight.value = chatMessages.scrollHeight
+    })
   })
 }
 
@@ -96,7 +121,7 @@ const requestMessageList = async () => {
   const body = {
     roomId: roomId.value,
     chatId: 0,
-    cnt: 7
+    cnt: 15
   }
   await store.requestMessage(body)
 }
@@ -125,20 +150,36 @@ const sendMessage = (msg: String) => {
   msg = ""
 }
 
-const scrolling = (event: any) => {
+const scrolling = async (event: any) => {
   const scrollHeight = event.target.scrollHeight
   const scrollTop = event.target.scrollTop
   const clientHeight = event.target.clientHeight
 
-  //console.log("aaascrollHeight ", scrollHeight)
-  //console.log("aaascrollTop ", scrollTop)
-  //console.log("aaaclientHeight ", clientHeight)
+  // console.log("aaascrollHeight ", scrollHeight)
+  // console.log("aaascrollTop ", scrollTop)
+  // console.log("aaaclientHeight ", clientHeight)
 
-  const isAtTheBottom = scrollTop === 0
+  const isTop = scrollTop === 0
 
-  if (isAtTheBottom) {
-    // setTimeout(() => chatMessage(), 1000)
-    // 최상단으로 이동했을때getMessageList
+  if (isTop) {
+    // 최상단으로 이동했을때
+    console.log(getRes.value)
+    if (getNextYn.value == "Y") {
+      const requestBody = {
+        // chatId: 이전 목록 리스트에서 마지막 chatId
+        roomId: getRes.value[getRes.value.length - 1].roomId,
+        chatId: getRes.value[getRes.value.length - 1].chatId,
+        cnt: 15
+      }
+      await store.requestMessage(requestBody)
+      message.value = getMessageList.value
+
+      let chatMessages = scrollRef.value
+      const nowScrollTo = chatMessages.scrollHeight - previousScrollHeight.value
+      console.log("ttscrollHeight", chatMessages.scrollHeight)
+      console.log("ttpreviousScrollHeight", previousScrollHeight.value)
+      chatMessages.scrollTo({ top: nowScrollTo })
+    }
   }
 }
 
