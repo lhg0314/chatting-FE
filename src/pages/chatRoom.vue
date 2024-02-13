@@ -80,8 +80,18 @@ const initailize = async () => {
         // 입장메세지
         enterMessage()
       },
-      (error) => {
-        console.log("소켓 연결 실패", error)
+      async (error: any) => {
+        if (error.body !== undefined) {
+          console.log("소켓 연결 실패", JSON.parse(error.body))
+          const resErr = JSON.parse(error.body)
+          if (resErr?.code === "C008") {
+            store.initMessage()
+            await requestMessageList() // access 토큰 만료되면  API조회 (accessToken 재발급)
+            message.value = getMessageList.value
+
+            await initailize()
+          }
+        }
       }
     )
   }).then(async () => {
