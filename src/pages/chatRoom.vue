@@ -111,7 +111,6 @@ const initailize = async () => {
       let chatMessages = scrollRef.value
       // 스크롤 최하단으로 이동
       chatMessages.scrollTo({ top: chatMessages.scrollHeight })
-      previousScrollHeight.value = chatMessages.scrollHeight
     })
   })
 }
@@ -159,11 +158,12 @@ const scrolling = async (event: any) => {
   // console.log("aaascrollTop ", scrollTop)
   // console.log("aaaclientHeight ", clientHeight)
 
-  const isTop = scrollTop === 0
+  if (scrollTop === 0) {
+    let chatMessages = scrollRef.value
+    previousScrollHeight.value = chatMessages.scrollHeight
+    console.log("최상단이동했을때, 두번째 조회 전", previousScrollHeight.value)
 
-  if (isTop) {
-    // 최상단으로 이동했을때
-    console.log(getRes.value)
+    // 최상단으로 이동했을때 nextYn이 Y면 메세지 조회
     if (getNextYn.value == "Y") {
       const requestBody = {
         // chatId: 이전 목록 리스트에서 마지막 chatId
@@ -174,11 +174,14 @@ const scrolling = async (event: any) => {
       await store.requestMessage(requestBody)
       message.value = getMessageList.value
 
-      let chatMessages = scrollRef.value
-      const nowScrollTo = chatMessages.scrollHeight - previousScrollHeight.value
-      console.log("ttscrollHeight", chatMessages.scrollHeight)
-      console.log("ttpreviousScrollHeight", previousScrollHeight.value)
-      chatMessages.scrollTo({ top: nowScrollTo })
+      nextTick(() => {
+        let chatMessages = scrollRef.value
+        console.log("두번째조회 후 scrollHeight", chatMessages.scrollHeight)
+        const nowScrollTo = chatMessages.scrollHeight - previousScrollHeight.value
+        console.log("ttscrollHeight", chatMessages.scrollHeight)
+        console.log("ttpreviousScrollHeight", previousScrollHeight.value)
+        chatMessages.scrollTo({ top: nowScrollTo })
+      })
     }
   }
 }

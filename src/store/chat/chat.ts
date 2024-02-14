@@ -28,12 +28,12 @@ export const useChatStore = defineStore("chatStore", () => {
     nextYn.value = data.nextYn
     //console.log("messageList.value", messageList.value)
 
-    const requestBody = {
-      // chatId: 이전 목록 리스트에서 마지막 chatId
-      roomId: data.msgList[data.msgList.length - 1].roomId,
-      chatId: data.msgList[data.msgList.length - 1].chatId,
-      cnt: 15
-    }
+    // const requestBody = {
+    //   // chatId: 이전 목록 리스트에서 마지막 chatId
+    //   roomId: data.msgList[data.msgList.length - 1].roomId,
+    //   chatId: data.msgList[data.msgList.length - 1].chatId,
+    //   cnt: 15
+    // }
     // if (data.nextYn == "Y") {
     //   await requestMessage(requestBody)
     // }
