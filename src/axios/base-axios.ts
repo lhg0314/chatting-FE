@@ -56,6 +56,10 @@ export default (
       setNewAccessToken(token.split(" ")[1])
     }
 
+    if (response.data.code === "C404") {
+      window.location.href = "/404"
+    }
+
     if (response.data.code === "C008") {
       clearTokenInfo()
       alert("토큰 만료! 로그인 페이지로 이동합니다 !")
