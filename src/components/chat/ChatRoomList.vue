@@ -23,7 +23,14 @@
           <div v-html="item.lastMessage"></div>
         </template>
         <template v-slot:append>
-          <v-chip v-if="item.unreadMessages" variant="flat" color="red" size="x-small"> {{ item.unreadMessages }} </v-chip>
+          <v-container>
+            <v-row class="d-flex align-center justify-center">
+              <p class="last-time">{{ item.time }}</p>
+            </v-row>
+            <v-row class="d-flex align-center justify-center">
+              <v-chip v-if="item.unreadMessages" variant="flat" color="red" size="x-small"> {{ item.unreadMessages }} </v-chip>
+            </v-row>
+          </v-container>
         </template>
       </v-list-item>
     </v-list>
@@ -32,6 +39,7 @@
 
 <script setup lang="ts">
 import { useChatStore } from "@/store/chat/chat"
+import dayjs from "dayjs"
 import { storeToRefs } from "pinia"
 import { computed, onMounted, onUnmounted, Ref, ref } from "vue"
 import { IChatRoom } from "@/types/chat"
@@ -42,6 +50,8 @@ import Stomp, { Client } from "webstomp-client"
 import SockJS from "sockjs-client"
 
 const emit = defineEmits(["click:room"])
+
+// lastMessageDate": "20240214174504"
 
 const router = useRouter()
 const store = useChatStore()
@@ -58,7 +68,17 @@ const initailize = async () => {
   }, 3000)
 }
 
-const roomList = computed(() => getChatRoomList.value)
+const roomList = computed(() => {
+  const result = getChatRoomList.value.map((item) => {
+    const dateYYYYMMDD = item.lastMessageDate?.slice(0, 8)
+    const nowYYYYMMDD = dayjs().format("YYYYMMDD")
+    const dateHHmmss = dayjs(item.lastMessageDate).format("HH:mm:ss")
+    const time = item.lastMessageDate ? (dateYYYYMMDD === nowYYYYMMDD ? dateHHmmss : dayjs(item.lastMessageDate).format("YY년MM월DD일")) : ""
+    return { ...item, ...{ time } }
+  })
+
+  return result
+})
 
 const modifyMode: Ref<boolean> = ref(false)
 
@@ -75,8 +95,6 @@ const deleteChatting = async (item: IChatRoom) => {
     console.log("소켓연결")
     await requestDeleteChatting({ userId: getUserId(), roomId: item.roomId, roomState: "N" })
     await connSocket(item.roomId)
-    console.log("소켓 연결 해제")
-    stompClient?.disconnect()
   }
 }
 
@@ -100,6 +118,8 @@ const connSocket = (roomId: number) => {
           messageType: "EXIT"
         }
         stompClient?.send("/pub/chat/" + roomId, JSON.stringify(body))
+        stompClient?.disconnect()
+        modifyMode.value = false
       },
       async (error: any) => {
         if (error.body !== undefined) {
@@ -156,3 +176,10 @@ onUnmounted(() => {
 //   }
 // ]
 </script>
+<style lang="css" scoped>
+.last-time {
+  color: gray;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+</style>
