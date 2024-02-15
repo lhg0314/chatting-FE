@@ -1,7 +1,11 @@
 <template>
   <v-layout class="chat-messages" row wrap>
     <v-flex v-for="(item, index) in messages.slice().reverse()" :key="index" xs12>
-      <v-card v-if="item.messageType === 'ENTER'" class="chat-system-message" color="grey-lighten-2" flat>
+      <v-card v-if="item.messageType === 'EXIT'" class="chat-system-message" color="grey-lighten-2" flat>
+        <v-card-text class="text-grey-darken-1"> {{ item.userId }} 님이 퇴장했습니다. </v-card-text>
+      </v-card>
+
+      <v-card v-else-if="item.messageType === 'ENTER'" class="chat-system-message" color="grey-lighten-2" flat>
         <v-card-text class="text-grey-darken-1"> {{ item.userId }} 님이 입장했습니다. </v-card-text>
       </v-card>
 
