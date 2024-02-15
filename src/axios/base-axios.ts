@@ -74,6 +74,10 @@ export default (
   })
   instance.interceptors.response.use(responseInterceptor || useTokenResponseInterceptor, ({ response }) => {
     console.log("interceptor option > ", _options)
+    if (response.data.code === "C404") {
+      window.location.href = "/404"
+      return
+    }
 
     if (_options.error) alert(response.data.message)
     store.setIsLoading(false)
