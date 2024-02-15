@@ -1,5 +1,5 @@
 import axios from "./base-axios"
-import { RequestDeleteChatting, RequestMessageList, ResponseChatRoom, ResponseMessageList } from "@/types/chat"
+import { RequestDeleteChatting, RequestMessageList, ResponseChatRoom, ResponseMessageList, RequestImg } from "@/types/chat"
 
 const chatService = axios()
 const chatListService = axios({ loading: false })
@@ -19,4 +19,11 @@ const requestDeleteChatting = async (body: RequestDeleteChatting) => {
   return data
 }
 
-export { requestChatRoomList, requestMessageList, requestDeleteChatting }
+const requestImg = async (formData: RequestImg) => {
+  const { data } = await chatService.post("/chat/upload", formData, {
+    headers: { "Content-Type": "multipart/form-data" }
+  })
+  return data
+}
+
+export { requestChatRoomList, requestMessageList, requestDeleteChatting, requestImg }

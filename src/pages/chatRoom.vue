@@ -6,7 +6,7 @@
     </div>
 
     <div class="chat-message-input">
-      <ChatInput @send:message="sendMessage" />
+      <ChatInput @send:message="sendMessage" :roomId="roomId" />
     </div>
   </div>
 </template>
@@ -70,7 +70,7 @@ const initailize = async () => {
             setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 100)
 
             // 상대방 입장했을때 readCnt -1
-            if (resMessage.messageType == "ENTER" && resMessage.userId != getUserId()) {
+            if ((resMessage.messageType == "ENTER" || resMessage.messageType == "EXIT") && resMessage.userId != getUserId()) {
               message.value.forEach((el) => {
                 if (!el.users?.includes(resMessage.userId)) {
                   el.users?.push(resMessage.userId)
