@@ -1,7 +1,12 @@
+import { getAccessToken } from "./apiUtil"
 import axios from "./base-axios"
 import { RequestDeleteChatting, RequestMessageList, ResponseChatRoom, ResponseMessageList, RequestImg } from "@/types/chat"
 
 const chatService = axios()
+const _chatService = axios({}, (config) => {
+  config.headers["Authorization"] = `Bearer ${getAccessToken()}`
+  return config
+})
 const chatListService = axios({ loading: false })
 
 const requestChatRoomList = async (userId: string): Promise<BaseRes<ResponseChatRoom>> => {
@@ -19,8 +24,8 @@ const requestDeleteChatting = async (body: RequestDeleteChatting) => {
   return data
 }
 
-const requestImg = async (formData: RequestImg) => {
-  const { data } = await chatService.post("/chat/upload", formData, {
+const requestImg = async (formData: FormData) => {
+  const { data } = await _chatService.post("/chat/upload", formData, {
     headers: { "Content-Type": "multipart/form-data" }
   })
   return data
