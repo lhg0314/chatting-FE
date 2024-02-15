@@ -55,7 +55,6 @@ const initailize = async () => {
       (frame) => {
         console.log("소켓 연결 성공", frame)
         // 서버의 메시지 전송 endpoint를 구독합니다.
-
         stompClient?.subscribe(
           "/sub/room/" + roomId.value,
           (res) => {
@@ -96,6 +95,8 @@ const initailize = async () => {
             await requestMessageList() // access 토큰 만료되면  API조회 (accessToken 재발급)
             message.value = getMessageList.value
 
+            // TODO message.value 초기화
+            message.value = []
             await initailize()
           }
         }
@@ -103,9 +104,8 @@ const initailize = async () => {
     )
   }).then(async () => {
     store.initMessage()
-    console.log("메세지조회")
     await requestMessageList()
-    message.value = getMessageList.value
+    message.value = [...message.value, ...getMessageList.value]
 
     nextTick(() => {
       let chatMessages = scrollRef.value
@@ -176,7 +176,6 @@ const scrolling = async (event: any) => {
 
       nextTick(() => {
         let chatMessages = scrollRef.value
-        console.log("두번째조회 후 scrollHeight", chatMessages.scrollHeight)
         const nowScrollTo = chatMessages.scrollHeight - previousScrollHeight.value
         console.log("ttscrollHeight", chatMessages.scrollHeight)
         console.log("ttpreviousScrollHeight", previousScrollHeight.value)
