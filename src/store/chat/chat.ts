@@ -40,7 +40,7 @@ export const useChatStore = defineStore("chatStore", () => {
   }
 
   // 이미지 정송
-  const requestImage = async (formData: RequestImg) => {
+  const requestImage = async (formData: FormData) => {
     const { data } = await requestImg(formData)
     console.log(data)
   }

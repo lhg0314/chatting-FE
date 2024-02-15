@@ -23,7 +23,6 @@
 <script lang="ts" setup>
 import { Ref, ref } from "vue"
 import { useChatStore } from "@/store/chat/chat"
-import { Ifile } from "@/types/chat"
 
 const store = useChatStore()
 
@@ -52,8 +51,7 @@ const submit = async () => {
     //Array.from(chosenFile.value).forEach((f) => formData.append("file", f))
     formData.append("file", chosenFile.value[0])
     formData.append("roomId", props.roomId)
-
-    await store.requestImage({ FormData: formData })
+    await store.requestImage(formData)
 
     //2. response 세팅해서 emit으로 전달
 
