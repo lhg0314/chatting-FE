@@ -5,16 +5,16 @@
         <v-card-text class="text-grey-darken-1"> {{ item.userId }} 님이 퇴장했습니다. </v-card-text>
       </v-card>
 
-      <v-card v-else-if="item.messageType === 'ENTER'" class="chat-system-message" color="grey-lighten-2" flat>
+      <!-- <v-card v-else-if="item.messageType === 'ENTER'" class="chat-system-message" color="grey-lighten-2" flat>
         <v-card-text class="text-grey-darken-1"> {{ item.userId }} 님이 입장했습니다. </v-card-text>
-      </v-card>
+      </v-card> -->
 
-      <v-card v-else class="chat-message-box" :class="item.userId == userId ? 'chat-right' : 'chat-left'" flat>
+      <v-card v-else-if="item.messageType == 'TALK'" class="chat-message-box" :class="item.userId == userId ? 'chat-right' : 'chat-left'" flat>
         <v-card-title class="chat-username" style="font-size: 1em">
           <div class="text-grey-darken-1">{{ item.userId != userId ? item.userId : "" }}</div>
         </v-card-title>
 
-        <!-- <v-img v-if="item.type === 'image'" :src="item.imageUrl" class="chat-image" max-width="400px" contain></v-img> -->
+        <v-img v-if="item.type === 'FILE'" :src="item.imageUrl" class="chat-image" max-width="400px" contain></v-img>
 
         <v-card-text class="chat-message">
           {{ item.message }}

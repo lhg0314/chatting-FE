@@ -48,3 +48,7 @@ export interface RequestDeleteChatting {
   roomId: number
   roomState: string
 }
+
+export interface RequestImg {
+  FormData: FormData
+}
