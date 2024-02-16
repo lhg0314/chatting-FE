@@ -62,6 +62,7 @@ const initailize = async () => {
             console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
             const resMessage = JSON.parse(res.body).data
+            getMessageList.value.unshift(resMessage)
             message.value.unshift(resMessage)
             console.log("messages >> ", message.value)
 
