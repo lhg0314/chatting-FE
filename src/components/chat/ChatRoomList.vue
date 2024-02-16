@@ -23,12 +23,14 @@
           <div v-html="item.lastMessage"></div>
         </template>
         <template v-slot:append>
-          <v-container>
+          <v-container style="width: 90px">
             <v-row class="d-flex align-center justify-center">
               <p class="last-time">{{ item.time }}</p>
             </v-row>
             <v-row class="d-flex align-center justify-center">
-              <v-chip v-if="item.unreadMessages" variant="flat" color="red" size="x-small"> {{ item.unreadMessages }} </v-chip>
+              <v-chip v-if="item.unreadMessages" variant="flat" color="red" size="x-small">
+                {{ item.unreadMessages > 999 ? "999+" : item.unreadMessages }}
+              </v-chip>
             </v-row>
           </v-container>
         </template>
