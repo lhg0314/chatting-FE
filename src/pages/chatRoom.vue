@@ -62,6 +62,7 @@ const initailize = async () => {
             console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
             const resMessage = JSON.parse(res.body).data
+            getMessageList.value.unshift(resMessage)
             message.value.unshift(resMessage)
             console.log("messages >> ", message.value)
 
@@ -120,7 +121,7 @@ const requestMessageList = async () => {
   const body = {
     roomId: roomId.value,
     chatId: 0,
-    cnt: 15
+    cnt: 10
   }
   await store.requestMessage(body)
 }
@@ -184,7 +185,7 @@ const scrolling = async (event: any) => {
         // chatId: 이전 목록 리스트에서 마지막 chatId
         roomId: getRes.value[getRes.value.length - 1].roomId,
         chatId: getRes.value[getRes.value.length - 1].chatId,
-        cnt: 15
+        cnt: 10
       }
       await store.requestMessage(requestBody)
       message.value = getMessageList.value
