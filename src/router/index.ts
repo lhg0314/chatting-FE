@@ -23,7 +23,12 @@ router.beforeEach((to, from, next) => {
   console.log("token : ", token)
 
   store.setIsMember(token ? true : false)
-
+  if (to.matched.some((record) => record.meta.hasTokenBack)) {
+    if (token) {
+      next("/userList")
+      return
+    }
+  }
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!token) {
       alert("로그인이 필요한 서비스입니다.")

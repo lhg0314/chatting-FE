@@ -32,7 +32,10 @@
         <v-card-text class="chat-message" v-if="item.messageType == 'TALK'">
           {{ item.message }}
         </v-card-text>
-        <p :class="item.userId == userId ? 'read-cnt-right' : 'read-cnt-left'" v-if="item.readCnt != 0">{{ item.readCnt }}</p>
+        <div :class="item.userId == userId ? 'msg-info-right' : 'msg-info-left'">
+          <p v-if="item.readCnt != 0">{{ item.readCnt }}</p>
+          <p>{{ item.sendTime }}</p>
+        </div>
       </v-card>
     </v-flex>
   </v-layout>
@@ -96,6 +99,22 @@ const clickImg = (fileUrl: any) => {
   }
   .v-card {
     overflow: visible;
+  }
+  .msg-info-left {
+    display: inline;
+    position: absolute;
+    bottom: -10px;
+    left: 101%;
+    text-align: left;
+    font-size: 12px;
+  }
+  .msg-info-right {
+    display: inline;
+    position: absolute;
+    bottom: -10px;
+    right: 101%;
+    text-align: right;
+    font-size: 12px;
   }
 }
 </style>
