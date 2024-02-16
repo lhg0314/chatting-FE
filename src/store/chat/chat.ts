@@ -43,9 +43,11 @@ export const useChatStore = defineStore("chatStore", () => {
 
   // 이미지 정송
   const requestImage = async (formData: FormData) => {
-    const { data } = await requestImg(formData)
-    console.log(data)
-    fileInfo.value = data
+    const res = await requestImg(formData)
+    console.log(res.data)
+    fileInfo.value = res.data
+
+    return res
   }
 
   // 초기화
