@@ -32,6 +32,7 @@ import { storeToRefs } from "pinia"
 import SockJS from "sockjs-client"
 import Stomp, { Client } from "webstomp-client"
 import { IFile, IMessage } from "@/types/chat"
+import dayjs from "dayjs"
 
 const route = useRoute()
 const store = useChatStore()
@@ -43,8 +44,15 @@ const roomId = ref() // 채팅방 번호
 const roomName = ref(route.query.roomName) // 채팅방 이름
 let stompClient: Client | null = null
 const message: Ref<IMessage[]> = ref([]) // 보낸 채팅
-const messages = computed(() => [...message.value])
+//const messages = computed(() => [...message.value])
 const previousScrollHeight = ref()
+
+const messages = computed(() =>
+  [...message.value].map((item) => {
+    const sendTime = dayjs(item.createAt).format("HH:mm")
+    return { ...item, ...{ sendTime } }
+  })
+)
 
 const initailize = async () => {
   console.log("query >>> ", route.query.roomId)
@@ -69,7 +77,7 @@ const initailize = async () => {
             console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
             const resMessage = JSON.parse(res.body).data
-            //getMessageList.value.unshift(resMessage)
+            getMessageList.value.unshift(resMessage)
             message.value.unshift(resMessage)
             console.log("messages >> ", message.value)
 
@@ -195,7 +203,8 @@ const scrolling = async (event: any) => {
         cnt: 10
       }
       await store.requestMessage(requestBody)
-      message.value = [...message.value, ...getMessageList.value]
+      //message.value = [...message.value, ...getMessageList.value]
+      message.value = getMessageList.value
 
       nextTick(() => {
         let chatMessages = scrollRef.value
