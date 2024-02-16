@@ -4,15 +4,7 @@
       <v-card class="pa-4 ma-14" title="Sign up">
         <v-card-item>
           <v-form ref="form" v-model="valid">
-            <v-text-field
-              :rules="rules.id"
-              @blur="onBlur('id')"
-              @focus="onfocus('id')"
-              ref="idInput"
-              v-model="id"
-              :counter="10"
-              label="ID"
-            ></v-text-field>
+            <v-text-field :rules="rules.id" @blur="onBlur('id')" @focus="onfocus('id')" ref="idInput" v-model="id" label="ID"></v-text-field>
             <v-text-field
               ref="pwInput"
               v-model="pw"
@@ -30,7 +22,6 @@
               @blur="onBlur('name')"
               @focus="onfocus('name')"
               v-model="name"
-              :counter="10"
               label="NAME"
             ></v-text-field>
 
