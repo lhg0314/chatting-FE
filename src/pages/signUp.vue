@@ -1,3 +1,11 @@
+<route lang="json">
+{
+  "meta": {
+    "hasTokenBack": true
+  }
+}
+</route>
+
 <template>
   <SignUpForm />
 </template>

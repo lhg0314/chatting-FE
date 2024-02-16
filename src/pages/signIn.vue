@@ -1,3 +1,10 @@
+<route lang="json">
+{
+  "meta": {
+    "hasTokenBack": true
+  }
+}
+</route>
 <template>
   <SignInForm />
 </template>

@@ -1,9 +1,12 @@
-<template>
-  <Docs />
-</template>
+<template></template>
 
 <script lang="ts" setup>
-import Docs from "@/components/Docs.vue"
+import { useRouter } from "vue-router"
 
-
+const router = useRouter()
+;(() => {
+  router.replace({
+    name: "/signIn"
+  })
+})()
 </script>
