@@ -23,15 +23,18 @@
 <script lang="ts" setup>
 import { Ref, ref } from "vue"
 import { useChatStore } from "@/store/chat/chat"
+import { storeToRefs } from "pinia"
 
 const store = useChatStore()
+const { getFileInfo } = storeToRefs(store)
 
-const emit = defineEmits(["send:message"])
+const emit = defineEmits(["send:message", "send:img"])
 const props = defineProps(["roomId"])
 
 const message = ref("") // 입력 메세지
 const toggle = ref("text")
-const chosenFile: Ref<File[] | undefined> = ref() // 이미지 파일정보
+const chosenFile: Ref<File[] | undefined> = ref() // 선택한 이미지
+const fileInfo = ref({})
 
 // 메세지 전송
 const send = () => {
@@ -48,12 +51,11 @@ const submit = async () => {
   if (chosenFile.value !== undefined) {
     console.log("파일정보", chosenFile.value[0])
 
-    //Array.from(chosenFile.value).forEach((f) => formData.append("file", f))
     formData.append("file", chosenFile.value[0])
     formData.append("roomId", props.roomId)
     await store.requestImage(formData)
-
-    //2. response 세팅해서 emit으로 전달
+    fileInfo.value = getFileInfo.value
+    emit("send:img", fileInfo.value)
 
     toggle.value = "text"
     chosenFile.value = undefined // reset
