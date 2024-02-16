@@ -1,3 +1,10 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true
+  }
+}
+</route>
 <template>
   <div class="chat-room-page">
     <div v-auto-scroll-bottom="messages" class="chat-messages-container" ref="scrollRef" @scroll="scrolling">

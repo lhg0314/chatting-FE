@@ -4,7 +4,7 @@
       <v-card class="pa-4 ma-14" title="Sign in">
         <v-card-item>
           <v-form ref="form">
-            <v-text-field ref="idInput" v-model="id" :counter="10" label="ID"></v-text-field>
+            <v-text-field ref="idInput" v-model="id" label="ID"></v-text-field>
             <v-text-field
               v-model="pw"
               :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
