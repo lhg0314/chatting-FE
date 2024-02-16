@@ -23,7 +23,8 @@
           v-if="item.messageType === 'FILE'"
           :src="`http://localhost:8085/${item.fileUrl}`"
           class="chat-image"
-          max-width="400px"
+          max-width="400"
+          height="200px"
           contain
           @click="clickImg(item.fileUrl)"
         ></v-img>
