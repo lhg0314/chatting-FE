@@ -9,14 +9,26 @@
         <v-card-text class="text-grey-darken-1"> {{ item.userId }} 님이 입장했습니다. </v-card-text>
       </v-card> -->
 
-      <v-card v-else-if="item.messageType == 'TALK'" class="chat-message-box" :class="item.userId == userId ? 'chat-right' : 'chat-left'" flat>
+      <v-card
+        v-else-if="item.messageType == 'TALK' || item.messageType === 'FILE'"
+        class="chat-message-box"
+        :class="item.userId == userId ? 'chat-right' : 'chat-left'"
+        flat
+      >
         <v-card-title class="chat-username" style="font-size: 1em">
           <div class="text-grey-darken-1">{{ item.userId != userId ? item.userId : "" }}</div>
         </v-card-title>
 
-        <v-img v-if="item.type === 'FILE'" :src="item.imageUrl" class="chat-image" max-width="400px" contain></v-img>
+        <v-img
+          v-if="item.messageType === 'FILE'"
+          :src="`http://localhost:8085/${item.fileUrl}`"
+          class="chat-image"
+          max-width="400px"
+          contain
+          @click="clickImg(item.fileUrl)"
+        ></v-img>
 
-        <v-card-text class="chat-message">
+        <v-card-text class="chat-message" v-if="item.messageType == 'TALK'">
           {{ item.message }}
         </v-card-text>
         <p :class="item.userId == userId ? 'read-cnt-right' : 'read-cnt-left'" v-if="item.readCnt != 0">{{ item.readCnt }}</p>
@@ -30,14 +42,15 @@ import { computed, onMounted, ref, watch } from "vue"
 import { getUserId } from "@/axios/apiUtil"
 
 const props = defineProps(["messages"])
-//const messages = ref(props.messages)
 const userId = ref(getUserId())
-
-console.log("props.messages >>> ", props.messages)
-
 const messages = computed(() => {
   return props.messages
 })
+
+const clickImg = (fileUrl: any) => {
+  console.log("이미지클릭")
+  window.open("http://localhost:8085/" + fileUrl)
+}
 </script>
 
 <style lang="scss" scoped>
