@@ -1,18 +1,20 @@
 import { defineStore } from "pinia"
 import { requestChatRoomList, requestMessageList, requestImg } from "@/axios/chat-service-axios"
 import { Ref, computed, ref } from "vue"
-import { IChatRoom, IMessageList, RequestMessageList, RequestImg } from "@/types/chat"
+import { IChatRoom, IFile, IMessageList, RequestMessageList } from "@/types/chat"
 
 export const useChatStore = defineStore("chatStore", () => {
   const chatRoomList: Ref<IChatRoom[]> = ref([])
   const messageList: Ref<IMessageList[]> = ref([])
   const res: Ref<IMessageList[]> = ref([])
   const nextYn: Ref<string> = ref("")
+  const fileInfo: Ref<IFile> = ref({})
 
   const getChatRoomList = computed(() => chatRoomList.value)
   const getMessageList = computed(() => messageList.value)
   const getRes = computed(() => res.value)
   const getNextYn = computed(() => nextYn.value)
+  const getFileInfo = computed(() => fileInfo.value)
 
   // 채팅방 목록 조회
   const requestChatRoom = async (userId: string) => {
@@ -43,6 +45,7 @@ export const useChatStore = defineStore("chatStore", () => {
   const requestImage = async (formData: FormData) => {
     const { data } = await requestImg(formData)
     console.log(data)
+    fileInfo.value = data
   }
 
   // 초기화
@@ -58,6 +61,7 @@ export const useChatStore = defineStore("chatStore", () => {
     getMessageList,
     getRes,
     getNextYn,
+    getFileInfo,
     initMessage
   }
 })

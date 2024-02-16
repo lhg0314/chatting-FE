@@ -6,7 +6,7 @@
     </div>
 
     <div class="chat-message-input">
-      <ChatInput @send:message="sendMessage" :roomId="roomId" />
+      <ChatInput @send:message="sendMessage" @send:img="sendImg" :roomId="roomId" />
     </div>
   </div>
 </template>
@@ -24,12 +24,12 @@ import { useChatStore } from "@/store/chat/chat"
 import { storeToRefs } from "pinia"
 import SockJS from "sockjs-client"
 import Stomp, { Client } from "webstomp-client"
-import { IMessage } from "@/types/chat"
+import { IFile, IMessage } from "@/types/chat"
 
 const route = useRoute()
 const store = useChatStore()
 const { getMessageList, getRes, getNextYn } = storeToRefs(store)
-const emits = defineEmits(["send:message"])
+const emits = defineEmits(["send:message", "send:img"])
 
 const scrollRef = ref()
 const roomId = ref() // 채팅방 번호
@@ -67,7 +67,7 @@ const initailize = async () => {
 
             let chatMessages = scrollRef.value
             // 스크롤 최하단으로 이동
-            setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 100)
+            setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 300)
 
             // 상대방 입장했을때 readCnt -1
             if ((resMessage.messageType == "ENTER" || resMessage.messageType == "EXIT") && resMessage.userId != getUserId()) {
@@ -147,6 +147,21 @@ const sendMessage = (msg: String) => {
   }
   stompClient?.send("/pub/chat/" + roomId.value, JSON.stringify(body))
   msg = ""
+}
+
+// 이미지 전송
+const sendImg = (file: IFile) => {
+  const userId = getUserId()
+  const body = {
+    roomId: roomId.value,
+    userId: userId,
+    fileName: file.fileName,
+    fileExt: file.fileExt,
+    fileUrl: file.fileUrl,
+    message: "",
+    messageType: "FILE"
+  }
+  stompClient?.send("/pub/chat/" + roomId.value, JSON.stringify(body))
 }
 
 const scrolling = async (event: any) => {

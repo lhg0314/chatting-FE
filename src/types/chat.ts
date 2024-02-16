@@ -48,3 +48,9 @@ export interface RequestDeleteChatting {
   roomId: number
   roomState: string
 }
+
+export interface IFile {
+  fileExt?: string
+  fileName?: string
+  fileUrl?: string
+}
