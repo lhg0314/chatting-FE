@@ -50,15 +50,21 @@ const submit = async () => {
   const formData = new FormData()
   if (chosenFile.value !== undefined) {
     console.log("파일정보", chosenFile.value[0])
-
     formData.append("file", chosenFile.value[0])
     formData.append("roomId", props.roomId)
-    await store.requestImage(formData)
-    fileInfo.value = getFileInfo.value
-    emit("send:img", fileInfo.value)
 
-    toggle.value = "text"
-    chosenFile.value = undefined // reset
+    const res = await store.requestImage(formData)
+    if (res.code != "") {
+      // 이미지가 아닐경우
+      alert(res.message)
+      return
+    } else {
+      fileInfo.value = getFileInfo.value
+      emit("send:img", fileInfo.value)
+
+      toggle.value = "text"
+      chosenFile.value = undefined // reset
+    }
   }
 }
 

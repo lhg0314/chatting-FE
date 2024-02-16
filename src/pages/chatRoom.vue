@@ -62,13 +62,13 @@ const initailize = async () => {
             console.log("구독으로 받은 메시지 입니다.", JSON.parse(res.body).data)
 
             const resMessage = JSON.parse(res.body).data
-            getMessageList.value.unshift(resMessage)
+            //getMessageList.value.unshift(resMessage)
             message.value.unshift(resMessage)
             console.log("messages >> ", message.value)
 
             let chatMessages = scrollRef.value
             // 스크롤 최하단으로 이동
-            setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 300)
+            setTimeout(() => chatMessages.scrollTo({ top: chatMessages.scrollHeight }), 200)
 
             // 상대방 입장했을때 readCnt -1
             if ((resMessage.messageType == "ENTER" || resMessage.messageType == "EXIT") && resMessage.userId != getUserId()) {
@@ -188,7 +188,7 @@ const scrolling = async (event: any) => {
         cnt: 10
       }
       await store.requestMessage(requestBody)
-      message.value = getMessageList.value
+      message.value = [...message.value, ...getMessageList.value]
 
       nextTick(() => {
         let chatMessages = scrollRef.value
