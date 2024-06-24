@@ -67,7 +67,7 @@ const initailize = async () => {
   await store.requestChatRoom(userId)
   requestInterv = setInterval(async () => {
     await store.requestChatRoom(userId) // 채팅방 목록
-  }, 3000)
+  }, 2000)
 }
 
 const roomList = computed(() => {

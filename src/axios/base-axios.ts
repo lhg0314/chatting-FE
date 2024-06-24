@@ -80,6 +80,11 @@ export default (
     }
 
     if (_options.error) alert(response.data.message)
+    if (response.data.code === "C008") {
+      clearTokenInfo()
+      alert("토큰 만료! 로그인 페이지로 이동합니다 !")
+      window.location.href = "/signin"
+    }
     store.setIsLoading(false)
     return Promise.reject(response.data)
   })
